@@ -1,5 +1,5 @@
 
-#include "C:\Users\henry\Documents\LHR\vcu-firmware-2025\Libs\vcu-model-2025\inc\util\1DLookUp.h"
+#include "Lookup1D.h"
 #include <cmath>
 #include <cstring>
 

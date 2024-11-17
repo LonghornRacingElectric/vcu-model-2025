@@ -2,12 +2,12 @@
 // Created by henry on 11/10/2024.
 //
 
-#ifndef INC_2DLOOKUP_H
-#define INC_2DLOOKUP_H
+#ifndef INC_Lookup2D_H
+#define INC_Lookup2D_H
 
 #include <vector>
 
-class 2DLookup {
+class Lookup2D {
 private:
     float x0 = 0;
     float x1 = 0;
@@ -15,12 +15,12 @@ private:
     float y1 = 0;
     float z[11][11] {};
 public:
-    2DLookup() = default;
-    2DLookup(float x0, float x1, float y0, float y1, float z[11][11]);
+    Lookup2D() = default;
+    Lookup2D(float x0, float x1, float y0, float y1, float z[11][11]);
     float operator()(float x, float y);
 };
 
-#endif //INC_2DLOOKUP_H
+#endif //INC_Lookup2D_H
 
 
 

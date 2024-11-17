@@ -3,7 +3,7 @@
 //
 
 
-#include "C:\Users\henry\Documents\LHR\vcu-firmware-2025\Libs\vcu-model-2025\inc\util\2Dlookup.h"
+#include "Lookup2D.h"
 #include <cmath>
 #include <cstring>
 

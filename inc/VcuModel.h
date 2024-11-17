@@ -8,10 +8,10 @@
 // include all the blocks and vcu params
 
 #include "VcuParameters.h"
-#include "../blocks/AppsProcessor.h"
-#include "../blocks/Stompp.h"
-#include "../blocks/TorqueMap.h"
-#include "../blocks/BreakLight.h"
+#include "blocks/AppsProcessor.h"
+#include "blocks/Stompp.h"
+#include "blocks/TorqueMap.h"
+#include "blocks/BrakeLight.h"
 
 
 typedef struct VcuInput {

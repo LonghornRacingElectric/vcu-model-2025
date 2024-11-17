@@ -5,7 +5,9 @@
 #ifndef VCUPARAMETERS_H
 #define VCUPARAMETERS_H
 
-#include "../util/CurveParameter.h"
+//#include "../util/CurveParameter.h"
+
+#include "util/Lookup1D.h"
 
 typedef struct VcuParameters {
     //APPS PARAMAETERS
@@ -21,7 +23,7 @@ typedef struct VcuParameters {
     float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
     float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
     //TORQUE MAP
-    CurveParameter mapPedalToTorqueRequest = CurveParameter(1.0f,
+    Lookup1D mapPedalToTorqueRequest = Lookup1D(1.0f,
                                                          230.0f); // torque request (Nm) as a function of pedal travel (%)
 }VcuParameters;
 
