@@ -16,6 +16,6 @@ include_directories(inc)
 add_subdirectory(tests)
 add_subdirectory(src)
 
-if(DEFINED SIL_TESTING)
+if(DEFINED VCU_SIL_TESTING)
     add_subdirectory(sil)
 endif()
