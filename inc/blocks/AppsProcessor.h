@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 
-#include "../src/VcuParameters.h"
+#include "VcuParameters.h"
 #include "../util/Timer.h"
 
 #define APPS_OK 0x00 // 0000

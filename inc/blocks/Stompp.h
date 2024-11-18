@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 
-#include "../src/VcuParameters.h"
+#include "VcuParameters.h"
 #define STOMPP_OK 0x00
 #define STOMPP_FAULT 0x01
 

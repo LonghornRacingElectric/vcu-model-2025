@@ -7,7 +7,7 @@
 
 
 
-#include "../src/VcuParameters.h"
+#include "VcuParameters.h"
 
 
 

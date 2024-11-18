@@ -5,7 +5,7 @@
 #ifndef BREAKLIGHT_H
 #define BREAKLIGHT_H
 
-#include "../src/VcuParameters.h"
+#include "VcuParameters.h"
 
 typedef struct BreakLightInput {
     //bool parkOrDrive; implement later

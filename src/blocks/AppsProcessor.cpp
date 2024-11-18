@@ -2,11 +2,14 @@
 // Created by henry on 10/27/2024.
 //
 
-#include "AppsProcessor.h"
+#include "../../inc/blocks/AppsProcessor.h"
 
-void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input, AppsProcessorOutput *output, float deltaTime) {
+void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
+                             AppsProcessorOutput *output, float deltaTime) {
     float diff = input->perc1 - input->perc2;
-    if(diff < 0) {diff = -diff;}
+    if (diff < 0) {
+        diff = -diff;
+    }
 
     if (diff > params->appsPlausibilityRange) {
         differenceClock.count(deltaTime);
@@ -23,10 +26,11 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input, A
     output->fault = APPS_OK;
     output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
 
-    //ASK ABOUT THIS
+    // ASK ABOUT THIS
 
     float appsNoDeadzone = (input->perc1 + input->perc2) / 2;
-    float slope = 1.0f / (1.0f - params->appsDeadZoneTopPct - params->appsDeadZoneBottomPct);
+    float slope = 1.0f / (1.0f - params->appsDeadZoneTopPct -
+                          params->appsDeadZoneBottomPct);
 
     if (appsNoDeadzone <= params->appsDeadZoneBottomPct) {
         output->perc = 0;
@@ -37,11 +41,7 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input, A
     }
 }
 
-void AppsProcessor::reset() {
-    differenceClock.reset();
-}
+void AppsProcessor::reset() { differenceClock.reset(); }
 void AppsProcessor::setParameters(VcuParameters *params) {
-    //Ask about apps implausibility time
+    // Ask about apps implausibility time
 }
-
-
