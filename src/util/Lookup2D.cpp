@@ -3,7 +3,7 @@
 //
 
 
-#include "Lookup2D.h"
+#include "../../inc/util/Lookup2D.h"
 #include <cmath>
 #include <cstring>
 
@@ -16,7 +16,7 @@
  * @param y1 maximum y, corresponds to last row, z[10][x]
  * @param z 11x11 matrix of f(x, y) where row index corresponds to y and column index to x
  */
-SurfaceParameter::SurfaceParameter(float x0, float x1, float y0, float y1, float z[11][11]) {
+Lookup2D::Lookup2D(float x0, float x1, float y0, float y1, float z[11][11]) {
     this->x0 = x0;
     this->x1 = x1;
     this->y0 = y0;
@@ -24,7 +24,7 @@ SurfaceParameter::SurfaceParameter(float x0, float x1, float y0, float y1, float
     memcpy(this->z, z, sizeof(float) * 11 * 11);
 }
 
-float SurfaceParameter::operator()(float x, float y) {
+float Lookup2D::operator()(float x, float y) {
     float xpct = (x - x0) / (x1 - x0) * 10.0f;
     xpct = fminf(xpct, 10.0f);
     xpct = fmaxf(xpct, 0.0f);

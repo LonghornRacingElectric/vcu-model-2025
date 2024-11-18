@@ -2,7 +2,7 @@
 // Created by henry on 10/27/2024.
 //
 
-#include "Stompp.h"
+#include "../../inc/blocks/Stompp.h"
 
 void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime) {
     //"stomppActive = false" means "output.ok = true"

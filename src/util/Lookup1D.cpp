@@ -1,15 +1,15 @@
 
-#include "Lookup1D.h"
+#include "../../inc/util/Lookup1D.h"
 #include <cmath>
 #include <cstring>
 
-1DLookup::1DLookup(float x0, float x1, float y[], float n) {
+Lookup1D::Lookup1D(float x0, float x1, float y[], float n) {
     this->x0 = x0;
     this->x1 = x1;
     memcpy(this->y, y, sizeof(float) * (n+1));
 }
 
-1DLookup::1DLookup(float xP, float yP) {
+Lookup1D::Lookup1D(float xP, float yP) {
     this->x0 = 0.0f;
     this->x1 = xP;
     this->n = 10.0;
@@ -17,7 +17,7 @@
         this->y[i] = yP * ((float)i) / this->n;
     }
 }
-1DLookup::1DLookup(float xP, float yP, float n) {
+Lookup1D::Lookup1D(float xP, float yP, float n) {
     this->x0 = 0.0f;
     this->x1 = xP;
     this->n = n;
@@ -26,7 +26,7 @@
     }
 }
 
-float 1DLookup::operator()(float x) {
+float Lookup1D::operator()(float x) {
     float pct = (x - x0) / (x1 - x0) * 10.0f;
     pct = fminf(pct, 10.0f);
     pct = fmaxf(pct, 0.0f);

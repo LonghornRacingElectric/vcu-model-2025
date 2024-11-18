@@ -22,4 +22,4 @@ public:
 };
 
 
-#endif //VCU_CORE_CURVEPARAMETER_H
+#endif VCU_CORE_Lookup1D_H

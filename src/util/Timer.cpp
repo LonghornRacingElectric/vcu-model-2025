@@ -1,4 +1,4 @@
-#include "Timer.h"
+#include "../../inc/util/Timer.h"
 
 Timer::Timer(float duration) {
     this->duration = duration;

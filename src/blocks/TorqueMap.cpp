@@ -1,4 +1,4 @@
-#include "TorqueMap.h"
+#include "../../inc/blocks/TorqueMap.h"
 
 /**
  * Map a pedal travel percentage to a torque request.
