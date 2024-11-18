@@ -11,8 +11,11 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-include_directories(inc sil/pybind11)
+include_directories(inc)
 
 add_subdirectory(tests)
 add_subdirectory(src)
-add_subdirectory(sil)
+
+if(DEFINED SIL_TESTING)
+    add_subdirectory(sil)
+endif()
