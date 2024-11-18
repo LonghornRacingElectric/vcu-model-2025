@@ -49,3 +49,8 @@ void VcuModel::evaluate(VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTim
     };
 }
 
+
+#ifdef VCU_FIRMWARE_2025_SIL_H
+#include "sil/pybind11/pybind11.h"
+
+#endif

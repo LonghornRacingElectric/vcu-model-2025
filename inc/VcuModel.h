@@ -55,5 +55,4 @@ public:
 };
 
 
-
 #endif //VCUMODEL_H
