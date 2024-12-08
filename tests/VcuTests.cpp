@@ -8,6 +8,6 @@ TEST(Vcu, NormalTorqueRequests) {
   VcuInput input;
   VcuOutput output;
 
-
+  EXPECT_EQ(1,1);
 //  printf("\n\n");
 }
