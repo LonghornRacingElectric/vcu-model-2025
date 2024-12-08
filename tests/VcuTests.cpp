@@ -9,5 +9,5 @@ TEST(Vcu, NormalTorqueRequests) {
   VcuOutput output;
 
 
-//  printf("\n\n");
+  printf("\n\n");
 }

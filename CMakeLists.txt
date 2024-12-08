@@ -13,7 +13,10 @@ FetchContent_MakeAvailable(googletest)
 
 include_directories(inc)
 
-add_subdirectory(tests)
+if(NOT DEFINED VCU_SIL_TESTING) 
+    add_subdirectory(tests)
+endif()
+
 add_subdirectory(src)
 
 if(DEFINED VCU_SIL_TESTING)
