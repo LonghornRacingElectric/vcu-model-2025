@@ -7,6 +7,9 @@ enable_testing()
 add_executable(
         ${BINARY}
         ${TEST_SOURCES}
+        AppsProcessorTests.cpp
+        StomppTests.cpp
+        TorqueMapTests.cpp
 )
 
 target_link_libraries(

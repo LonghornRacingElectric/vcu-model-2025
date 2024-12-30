@@ -14,6 +14,7 @@ typedef struct VcuParameters {
     float appsPlausibilityRange = 0.10f; //(%)
     float appsDeadZoneBottomPct = 0.08f; // (%) of travel that is 0 or 100
     float appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
+    float appsImplausibilityTime = 0.100f; // (s)
 
     // BRAKE PARAMETERS
     float brakesSoftThreshold = 0.03f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
@@ -22,6 +23,7 @@ typedef struct VcuParameters {
     //STOMPP
     float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
     float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
+    float stomppMechanicalBrakesThreshold = 0.1f;
     //TORQUE MAP
     Lookup1D mapPedalToTorqueRequest = Lookup1D(1.0f,
                                                          230.0f); // torque request (Nm) as a function of pedal travel (%)

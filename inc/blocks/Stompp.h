@@ -27,7 +27,7 @@ class Stompp {
 public:
     void reset();
     void toggleStompp();
-    void setParameters(VcuParameters *vcuParameters);
+    void setParameters(VcuParameters *vcuParameters) {};
     void evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
 private:
     bool stomppActive = false;

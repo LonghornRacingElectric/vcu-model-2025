@@ -2,6 +2,7 @@
 #include "../../inc/util/Lookup1D.h"
 #include <cmath>
 #include <cstring>
+#include <iostream>
 
 Lookup1D::Lookup1D(float x0, float x1, float y[], float n) {
     this->x0 = x0;
@@ -12,17 +13,14 @@ Lookup1D::Lookup1D(float x0, float x1, float y[], float n) {
 Lookup1D::Lookup1D(float xP, float yP) {
     this->x0 = 0.0f;
     this->x1 = xP;
-    this->n = 10.0;
     for(int i = 0; i < 11; i++) {
-        this->y[i] = yP * ((float)i) / this->n;
+        this->y[i] = yP * ((float)i) / 10.0f;
     }
+
 }
-Lookup1D::Lookup1D(float xP, float yP, float n) {
-    this->x0 = 0.0f;
-    this->x1 = xP;
-    this->n = n;
+void Lookup1D::print() {
     for(int i = 0; i < 11; i++) {
-        this->y[i] = yP * ((float)i) / this->n;
+        std::cout << this->y[i] << std::endl;
     }
 }
 

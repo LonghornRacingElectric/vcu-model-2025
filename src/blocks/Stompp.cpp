@@ -18,7 +18,7 @@ void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *o
     //Check for two main requirements. Enable STOMPP IF:
     //  Brakes are active
     //  Accelerator Travel > 25%
-    if ((input->bse > params->brakesSoftThreshold) && (input->pedal > params->stomppAppsCutoffThreshold)) {
+    if ((input->bse > params->stomppMechanicalBrakesThreshold) && (input->pedal > params->stomppAppsCutoffThreshold)) {
         output->ok = false;
         stomppActive = true;
     }
@@ -44,5 +44,6 @@ void Stompp::reset() {
 void Stompp::toggleStompp() {
     stomppActive = true;
 }
+
 
 

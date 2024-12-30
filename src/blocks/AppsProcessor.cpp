@@ -4,6 +4,9 @@
 
 #include "../../inc/blocks/AppsProcessor.h"
 
+#include <iostream>
+#include <ostream>
+
 void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
                              AppsProcessorOutput *output, float deltaTime) {
     float diff = input->perc1 - input->perc2;
@@ -15,7 +18,7 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
         differenceClock.count(deltaTime);
         if (differenceClock.isFinished()) {
             output->fault = APPS_DISAGREE;
-            output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
+            output->ok = false;
             output->perc = 0;
             return;
         }
@@ -39,9 +42,11 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
     } else {
         output->perc = slope * (appsNoDeadzone - params->appsDeadZoneBottomPct);
     }
+    //std::cout << "perc " << output->perc << std::endl;
 }
 
 void AppsProcessor::reset() { differenceClock.reset(); }
 void AppsProcessor::setParameters(VcuParameters *params) {
     // Ask about apps implausibility time
+    this->differenceClock = Timer(params->appsImplausibilityTime);
 }
