@@ -20,10 +20,31 @@ typedef struct VcuParameters {
     float brakesSoftThreshold = 0.03f; // minimum brakes to count as mechanical brakes engaged for EV 4.7, also brake light (%)
     float brakesHardThreshold = 0.08f; // hard braking (%)
 
+    // ===== PRNDL PARAMETERS =====
+    float prndlBrakeToStartThreshold = 0.1f; // minimum brakes required to go into drive (%)
+    float prndlBuzzerDuration = 2.0f; // how long the buzzer buzzes (s)
+    float prndlSwitchDebounceDuration = 0.100f; // how long a digital high/low must be sustained to be considered (s)
+
     //STOMPP
     float stomppAppsCutoffThreshold = 0.25f; // apps pedal travel where motor power needs to be cut off (%)
     float stomppAppsRecoveryThreshold = 0.05f; // apps pedal travel where motor power can be restored (%)
     float stomppMechanicalBrakesThreshold = 0.1f;
+
+    // ==== TRACTION CONTROL PARAMETERS =====
+    bool tcsEnabled = true;
+    float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
+
+    // ==== STEERING PARAMETERS ====
+    Lookup1D steeringWheelToOuterWheel;
+    Lookup1D steeringWheelToInnerWheel;
+    float steeringPotMaxVoltage = 3.3f;
+    float steeringWheelMaxAngle = 90.0f;
+
+    // ==== COOLING PARAMETERS =====
+    Lookup1D  coolingBattery;
+    Lookup1D  coolingMotor;
+
+
     //TORQUE MAP
     Lookup1D mapPedalToTorqueRequest = Lookup1D(1.0f,
                                                          230.0f); // torque request (Nm) as a function of pedal travel (%)
