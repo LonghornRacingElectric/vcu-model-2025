@@ -11,6 +11,8 @@ set(SOURCES ${SOURCES}
         ../inc/blocks/Steering.h
         blocks/Steering.cpp
         ../inc/blocks/Cooling.h
-        blocks/Cooling.cpp)
+        blocks/Cooling.cpp
+        ../inc/blocks/Indicator.h
+        blocks/Indicator.cpp)
 
 add_library(vcu_model_lib STATIC ${SOURCES})

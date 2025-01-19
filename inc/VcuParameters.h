@@ -31,14 +31,14 @@ typedef struct VcuParameters {
     float stomppMechanicalBrakesThreshold = 0.1f;
 
     // ==== TRACTION CONTROL PARAMETERS =====
-    bool tcsEnabled = true;
+    bool tcsEnabled = false;
     float tcsFeedbackLowPassFilterTimeConstant = 0.050f;
 
     // ==== STEERING PARAMETERS ====
     Lookup1D steeringWheelToOuterWheel;
     Lookup1D steeringWheelToInnerWheel;
     float steeringPotMaxVoltage = 3.3f;
-    float steeringWheelMaxAngle = 90.0f;
+    float steeringWheelMaxAngle = 120.0f;
 
     // ==== COOLING PARAMETERS =====
     Lookup1D  coolingBattery;
