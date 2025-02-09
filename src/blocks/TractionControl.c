@@ -9,11 +9,12 @@
  * This prevents the car from spinning out, giving the driver more confidence in acceleration.
  */
 
-void TractionControl::setParameters(VcuParameters *params) {
-    lowPassFeedback = LowPassFilter(params->tcsFeedbackLowPassFilterTimeConstant);
+void TractionControl_setParameters(TractionControl* tractionControl, VcuParameters *params) {
+    LowPassFilter_init(&tractionControl->lowPassFeedback, params->tcsFeedbackLowPassFilterTimeConstant);
+    //tractionControl->lowPassFeedback = LowPassFilter(params->tcsFeedbackLowPassFilterTimeConstant);
 }
 
-void TractionControl::evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output,
+void TractionControl_evaluate(TractionControl* tractionControl, VcuParameters *params, TractionControlInput *input, TractionControlOutput *output,
                                float deltaTime) {
     if(!params->tcsEnabled || !input->wheelSpeedsOk) {
         output->regulatedTorqueRequest = input->unregulatedTorqueRequest;
@@ -30,8 +31,9 @@ void TractionControl::evaluate(VcuParameters *params, TractionControlInput *inpu
         excessSlip = 0;
     }
     excessVelocity = excessSlip * averageFrontVelocity;
-    lowPassFeedback.add(excessVelocity, deltaTime);
-    excessVelocity = lowPassFeedback.get();
+    LowPassFilter_add(&tractionControl->lowPassFeedback, excessVelocity, deltaTime);
+    //lowPassFeedback.add(excessVelocity, deltaTime);
+    excessVelocity = LowPassFilter_get(&tractionControl->lowPassFeedback);
 
     float negativeFeedback = 3.0f * excessVelocity;
 

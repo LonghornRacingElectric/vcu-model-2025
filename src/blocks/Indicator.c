@@ -4,7 +4,7 @@
 
 #include "../../inc/blocks/Indicator.h"
 
-void Indicator::evaluate(VcuParameters *params, IndicatorOutput *output, IndicatorInput *input, float deltaTime) {
+void Indicator_evaluate(VcuParameters *params, IndicatorOutput *output, IndicatorInput *input, float deltaTime) {
     if (!input->bmsFault && !input->imdFault) {
         output->greenOn = true;
         output->redFlash = false;
@@ -12,7 +12,7 @@ void Indicator::evaluate(VcuParameters *params, IndicatorOutput *output, Indicat
     } else {
         output->greenOn = false;
         output->redFlash = true;
-        return
+        return;
     }
 }
 

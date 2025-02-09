@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 #include "../util/Timer.h"
 
 #define APPS_OK 0x00 // 0000
@@ -29,15 +29,23 @@ typedef struct AppsProcessorOutput {
     bool ok;
 }AppsProcessorOutput;
 
-class AppsProcessor {
-public:
-    void reset();
-    void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
-    void setParameters(VcuParameters* params);
-private:
-    //clocks and low pass filters
-    Timer differenceClock = Timer(0.1f); //why??
-};
+typedef struct AppsProcessor {
+    Timer differenceClock;
+} AppsProcessor;
+
+void AppsProcessor_reset(AppsProcessor *processor);
+void AppsProcessor_evaluate(AppsProcessor *processor, VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
+void AppsProcessor_setParameters(AppsProcessor *processor, VcuParameters* params);
+
+// class AppsProcessor {
+// public:
+//     void reset();
+//     void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
+//     void setParameters(VcuParameters* params);
+// private:
+//     //clocks and low pass filters
+//     Timer differenceClock = Timer(0.1f); //why??
+// };
 
 
 

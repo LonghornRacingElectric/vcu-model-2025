@@ -7,7 +7,7 @@
 
 
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 
 
 
@@ -27,12 +27,14 @@ typedef struct TorqueMapOutput {
     float torqueRequest; // torque (Nm)
 } TorqueMapOutput;
 
+void TorqueMap_setParameters(VcuParameters* params);
+void TorqueMap_evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
 
-class TorqueMap {
-public:
-    void setParameters(VcuParameters* params);
-    void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
-};
+// class TorqueMap {
+// public:
+//     void setParameters(VcuParameters* params);
+//     void evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
+// };
 
 
 

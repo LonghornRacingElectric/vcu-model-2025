@@ -4,7 +4,8 @@
 
 #ifndef INDICATOR_H
 #define INDICATOR_H
-#include <VcuParameters.h>
+#include <../inc/VcuParameters.h>
+#include <stdbool.h>
 
 #endif //INDICATOR_H
 
@@ -17,8 +18,10 @@ typedef struct IndicatorOutput {
     bool redFlash;
 }IndicatorOutput;
 
-class Indicator {
-    public:
-    void setParameters(VcuParameters *params);
-    void evaluate(VcuParameters *params, IndicatorOutput *output, IndicatorInput *input, float deltaTime);
-}
+void Indicator_evaluate(VcuParameters *params, IndicatorOutput *output, IndicatorInput *input, float deltaTime);
+
+// class Indicator {
+//     public:
+//     void setParameters(VcuParameters *params);
+//     void evaluate(VcuParameters *params, IndicatorOutput *output, IndicatorInput *input, float deltaTime);
+// }

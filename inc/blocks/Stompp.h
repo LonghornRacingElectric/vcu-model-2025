@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 #define STOMPP_OK 0x00
 #define STOMPP_FAULT 0x01
 
@@ -22,16 +22,25 @@ typedef struct StomppOutput {
     bool ok; // break (%)
 }StomppOutput;
 
-
-class Stompp {
-public:
-    void reset();
-    void toggleStompp();
-    void setParameters(VcuParameters *vcuParameters) {};
-    void evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
-private:
+typedef struct Stompp {
     bool stomppActive = false;
-};
+} Struct;
+
+
+ void Stompp_reset(Stompp* stompp);
+ void Stompp_toggle(Stompp* stompp);
+ void Stompp_setParameters(Stompp* stompp, VcuParameters *vcuParameters) {};
+ void Stompp_evaluate(Stompp* stompp, VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
+
+// class Stompp {
+// public:
+//     void reset();
+//     void toggleStompp();
+//     void setParameters(VcuParameters *vcuParameters) {};
+//     void evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
+// private:
+//     bool stomppActive = false;
+// };
 
 
 

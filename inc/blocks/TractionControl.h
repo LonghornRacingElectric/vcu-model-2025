@@ -5,9 +5,10 @@
 #ifndef TRACTIONCONTROL_H
 #define TRACTIONCONTROL_H
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 
 #include "util/LowPassFilter.h"
+#include <stdbool.h>
 // #include "util/Differentiator.h"
 
 
@@ -28,18 +29,25 @@ typedef struct TractionControlOutput {
 } TractionControlOutput;
 
 
-class TractionControl {
-private:
-    //ask where are the differentiators used
-    // Differentiator differentiatorFl;
-    // Differentiator differentiatorFr;
-    // Differentiator differentiatorBl;
-    // Differentiator differentiatorBr;
+typedef struct TractionControl {
+    LowPassFilter lowPassFeedback;
+} TractionControl;
 
-    LowPassFilter lowPassFeedback = LowPassFilter(0);
-public:
-    void setParameters(VcuParameters* params);
-    void evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output, float deltaTime);
-};
+void setParameters(TractionControl* tractionControl, VcuParameters* params);
+void evaluate(TractionControl* tractionControl, VcuParameters *params, TractionControlInput *input, TractionControlOutput *output, float deltaTime);
+
+// class TractionControl {
+// private:
+//     //ask where are the differentiators used
+//     // Differentiator differentiatorFl;
+//     // Differentiator differentiatorFr;
+//     // Differentiator differentiatorBl;
+//     // Differentiator differentiatorBr;
+//
+//     LowPassFilter lowPassFeedback = LowPassFilter(0);
+// public:
+//     void setParameters(VcuParameters* params);
+//     void evaluate(VcuParameters *params, TractionControlInput *input, TractionControlOutput *output, float deltaTime);
+// };
 
 #endif //TRACTIONCONTROL_H

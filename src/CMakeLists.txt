@@ -1,18 +1,16 @@
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES}
-        ../inc/blocks/Prndl.h
         ../inc/util/Debounce.h
-        util/Debounce.cpp
-        blocks/Prndl.cpp
+        util/Debounce.c
         ../inc/util/LowPassFilter.h
-        util/LowPassFilter.cpp
+        util/LowPassFilter.c
         ../inc/blocks/TractionControl.h
-        blocks/TractionControl.cpp
+        blocks/TractionControl.c
         ../inc/blocks/Steering.h
-        blocks/Steering.cpp
+        blocks/Steering.c
         ../inc/blocks/Cooling.h
-        blocks/Cooling.cpp
+        blocks/Cooling.c
         ../inc/blocks/Indicator.h
-        blocks/Indicator.cpp)
+        blocks/Indicator.c)
 
 add_library(vcu_model_lib STATIC ${SOURCES})

@@ -28,10 +28,7 @@ typedef struct VcuOutput {
     float ineverterTorqueRequests; // torque(Nm)
 }VcuOutput;
 
-
-class VcuModel {
-private:
-    //instatiate all block objects
+typedef struct VcuModel {
     VcuParameters *params;
 
     AppsProcessor appsProcessor;
@@ -42,17 +39,43 @@ private:
     StomppInput stomppInput;
     StomppOutput stomppOutput;
 
-    TorqueMap torqueMap;
+    //TorqueMap torqueMap;
     TorqueMapInput torqueMapInput;
     TorqueMapOutput torqueMapOutput;
 
-    BreakLight breakLight;
-    BreakLightInput breakLightInput;
-    BreakLightOutput breakLightOutput;
-public:
-    void setParameters(VcuParameters *newParams);
-    void evaluate(VcuInput *input, VcuOutput *output, float deltaTime);
-};
+    // BreakLight breakLight;
+    // BreakLightInput breakLightInput;
+    // BreakLightOutput breakLightOutput;
+} VcuModel;
+
+void VcuModel_setParameters(VcuModel *vcu, VcuParameters *newParams);
+void VcuModel_evaluate(VcuModel *vcu, VcuInput *input, VcuOutput *output, float deltaTime);
+
+
+// class VcuModel {
+// private:
+//     //instatiate all block objects
+//     VcuParameters *params;
+//
+//     AppsProcessor appsProcessor;
+//     AppsProcessorInput appsProcessorInput;
+//     AppsProcessorOutput appsProcessorOutput;
+//
+//     Stompp stompp;
+//     StomppInput stomppInput;
+//     StomppOutput stomppOutput;
+//
+//     //TorqueMap torqueMap;
+//     TorqueMapInput torqueMapInput;
+//     TorqueMapOutput torqueMapOutput;
+//
+//     BreakLight breakLight;
+//     BreakLightInput breakLightInput;
+//     BreakLightOutput breakLightOutput;
+// public:
+//     void setParameters(VcuParameters *newParams);
+//     void evaluate(VcuInput *input, VcuOutput *output, float deltaTime);
+// };
 
 
 #endif //VCUMODEL_H

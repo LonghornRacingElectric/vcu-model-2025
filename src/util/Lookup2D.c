@@ -16,23 +16,23 @@
  * @param y1 maximum y, corresponds to last row, z[10][x]
  * @param z 11x11 matrix of f(x, y) where row index corresponds to y and column index to x
  */
-Lookup2D::Lookup2D(float x0, float x1, float y0, float y1, float z[11][11]) {
-    this->x0 = x0;
-    this->x1 = x1;
-    this->y0 = y0;
-    this->y1 = y1;
-    memcpy(this->z, z, sizeof(float) * 11 * 11);
+void Lookup2D_init(Lookup2D* lookup2d, float x0, float x1, float y0, float y1, float z[11][11]) {
+    lookup2d->x0 = x0;
+    lookup2d->x1 = x1;
+    lookup2d->y0 = y0;
+    lookup2d->y1 = y1;
+    memcpy(lookup2d->z, z, sizeof(float) * 11 * 11);
 }
 
-float Lookup2D::operator()(float x, float y) {
-    float xpct = (x - x0) / (x1 - x0) * 10.0f;
+float Lookup2D_evaluate(Lookup2D* lookup2d, float x, float y) {
+    float xpct = (x - lookup2d->x0) / (lookup2d->x1 - lookup2d->x0) * 10.0f;
     xpct = fminf(xpct, 10.0f);
     xpct = fmaxf(xpct, 0.0f);
 
     int xi = (int) floorf(xpct);
     int xj = (int) ceilf(xpct);
 
-    float ypct = (y - y0) / (y1 - y0) * 10.0f;
+    float ypct = (y - lookup2d->y0) / (lookup2d->y1 - lookup2d->y0) * 10.0f;
     ypct = fminf(ypct, 10.0f);
     ypct = fmaxf(ypct, 0.0f);
 
@@ -40,8 +40,8 @@ float Lookup2D::operator()(float x, float y) {
     int yj = (int) ceilf(ypct);
 
     float a = xpct - (float) xi;
-    float z0 = ((1-a) * z[yi][xi]) + (a * z[yi][xj]);
-    float z1 = ((1-a) * z[yj][xi]) + (a * z[yj][xj]);
+    float z0 = ((1-a) * lookup2d->z[yi][xi]) + (a * lookup2d->z[yi][xj]);
+    float z1 = ((1-a) * lookup2d->z[yj][xi]) + (a * lookup2d->z[yj][xj]);
 
     float b = ypct - (float) yi;
     float zr = ((1-b) * z0) + (b * z1);

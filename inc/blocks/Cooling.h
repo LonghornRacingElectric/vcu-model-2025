@@ -7,7 +7,7 @@
 
 
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 
 
 typedef struct CoolingInput {
@@ -23,10 +23,12 @@ typedef struct CoolingOutput {
     float batteryFansOutput;
 } CoolingOutput;
 
+void Cooling_evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, float deltaTime);
 
-class Cooling {
-public:
-    void setParameters(VcuParameters* params);
-    void evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, float deltaTime);
-};
+
+// class Cooling {
+// public:
+//     void setParameters(VcuParameters* params);
+//     void evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, float deltaTime);
+// };
 #endif //COOLING_H

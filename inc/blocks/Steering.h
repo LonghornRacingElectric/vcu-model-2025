@@ -5,7 +5,7 @@
 #ifndef STEERING_H
 #define STEERING_H
 
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 
 
 typedef struct SteeringInput {
@@ -21,12 +21,14 @@ typedef struct SteeringOutput {
     float wheelAngleBr;
 } SteeringOutput;
 
+//void setParameters(VcuParameters* params) {};
+void evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime);
 
-class Steering {
-public:
-    void setParameters(VcuParameters* params) {};
-    void evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime);
-};
+// class Steering {
+// public:
+//     void setParameters(VcuParameters* params) {};
+//     void evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime);
+// };
 
 
 #endif //STEERING_H

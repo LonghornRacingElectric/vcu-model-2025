@@ -7,7 +7,7 @@
 #include <iostream>
 #include <ostream>
 
-void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
+void AppsProcessor_evaluate(AppsProcessor* processor, VcuParameters *params, AppsProcessorInput *input,
                              AppsProcessorOutput *output, float deltaTime) {
     float diff = input->perc1 - input->perc2;
     if (diff < 0) {
@@ -15,15 +15,16 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
     }
 
     if (diff > params->appsPlausibilityRange) {
-        differenceClock.count(deltaTime);
-        if (differenceClock.isFinished()) {
+        Timer_count(&processor->differenceClock, deltaTime);
+
+        if (Timer_isFinished(&processor->differenceClock)) {
             output->fault = APPS_DISAGREE;
             output->ok = false;
             output->perc = 0;
             return;
         }
     } else {
-        differenceClock.reset();
+        Timer_reset(&processor->differenceClock);
     }
 
     output->fault = APPS_OK;
@@ -45,8 +46,11 @@ void AppsProcessor::evaluate(VcuParameters *params, AppsProcessorInput *input,
     //std::cout << "perc " << output->perc << std::endl;
 }
 
-void AppsProcessor::reset() { differenceClock.reset(); }
-void AppsProcessor::setParameters(VcuParameters *params) {
+void AppsProcessor_reset(AppsProcessor* processor) {
+    Timer_reset(&processor->differenceClock);
+}
+void AppsProcessor_setParameters(AppsProcessor* processor, VcuParameters *params) {
     // Ask about apps implausibility time
-    this->differenceClock = Timer(params->appsImplausibilityTime);
+     Timer_init(&processor->differenceClock, params->appsImplausibilityTime);
+    //this->differenceClock = Timer(params->appsImplausibilityTime);
 }

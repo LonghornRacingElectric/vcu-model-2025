@@ -4,7 +4,7 @@
  * Map a pedal travel percentage to a torque request.
  */
 
-void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime) {
+void TorqueMap_evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime) {
     float torqueRequest = params->mapPedalToTorqueRequest(input->apps);
     float derate;
 
@@ -49,7 +49,7 @@ void TorqueMap::evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMap
     output->torqueRequest = torqueRequest;
 }
 
-void TorqueMap::setParameters(VcuParameters *params) {
+void TorqueMap_setParameters(VcuParameters *params) {
     // this->powerNegativeFeedbackFilter = LowPassFilter(params->mapPowerLimitFeedbackTimeConstant);
     return;
 }

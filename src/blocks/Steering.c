@@ -13,16 +13,20 @@
  * isn't acting up.
 */
 
-void Steering::evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime) {
+void Steering_evaluate(VcuParameters *params, SteeringInput *input, SteeringOutput *output, float deltaTime) {
     output->steeringWheelAngle =
         -2.0f * (params->steeringWheelMaxAngle) * (((input->steeringPotVoltage) / params->steeringPotMaxVoltage) - 0.5f);
 
     if (output->steeringWheelAngle > 0) {
-        output->wheelAngleFl = params->steeringWheelToInnerWheel(output->steeringWheelAngle);
-        output->wheelAngleFr = params->steeringWheelToOuterWheel(output->steeringWheelAngle);
+        Lookup1D_evaluate(&params->steeringWheelToInnerWheel, output->steeringWheelAngle);
+        Lookup1D_evaluate(&params->steeringWheelToOuterWheel, output->steeringWheelAngle);
+        // output->wheelAngleFl = params->steeringWheelToInnerWheel(output->steeringWheelAngle);
+        // output->wheelAngleFr = params->steeringWheelToOuterWheel(output->steeringWheelAngle);
     } else if (output->steeringWheelAngle < 0) {
-        output->wheelAngleFl = -params->steeringWheelToOuterWheel(-output->steeringWheelAngle);
-        output->wheelAngleFr = -params->steeringWheelToInnerWheel(-output->steeringWheelAngle);
+        Lookup1D_evaluate(&params->steeringWheelToInnerWheel, -output->steeringWheelAngle);
+        Lookup1D_evaluate(&params->steeringWheelToOuterWheel, -output->steeringWheelAngle);
+        //output->wheelAngleFl = -params->steeringWheelToOuterWheel(-output->steeringWheelAngle);
+        //output->wheelAngleFr = -params->steeringWheelToInnerWheel(-output->steeringWheelAngle);
     } else if (output->steeringWheelAngle == 0) {
         output->wheelAngleFl = 0;
         output->wheelAngleFr = 0;

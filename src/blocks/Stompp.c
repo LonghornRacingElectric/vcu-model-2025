@@ -4,7 +4,7 @@
 
 #include "../../inc/blocks/Stompp.h"
 
-void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime) {
+void Stompp_evaluate(Stompp* stompp, VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime) {
     //"stomppActive = false" means "output.ok = true"
     //"output.ok = true" means motor functions normally
 
@@ -20,29 +20,29 @@ void Stompp::evaluate(VcuParameters *params, StomppInput *input, StomppOutput *o
     //  Accelerator Travel > 25%
     if ((input->bse > params->stomppMechanicalBrakesThreshold) && (input->pedal > params->stomppAppsCutoffThreshold)) {
         output->ok = false;
-        stomppActive = true;
+        stompp->stomppActive = true;
     }
     //To disable STOMPP, Accelerator Travel must fall under 5%
-    if (stomppActive) {
+    if (stompp->stomppActive) {
         output->ok = false;
         if (input->pedal < params->stomppAppsRecoveryThreshold) {
             output->ok = true;
-            stomppActive = false;
+            stompp->stomppActive = false;
         }
     }
 
     //Check if STOMPP has been disabled
-    if (!stomppActive)
+    if (!stompp->stomppActive)
         output->ok = true;
 
     output->fault = (!output->ok) * STOMPP_FAULT;
 }
 
-void Stompp::reset() {
-    stomppActive = false;
+void Stompp_reset(Stompp* stompp) {
+    stompp->stomppActive = false;
 }
-void Stompp::toggleStompp() {
-    stomppActive = true;
+void Stompp_toggle(Stompp* stompp) {
+    stompp->stomppActive = true;
 }
 
 

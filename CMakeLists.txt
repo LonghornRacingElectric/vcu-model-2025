@@ -16,6 +16,16 @@ include_directories(inc)
 add_subdirectory(tests)
 add_subdirectory(src)
 
+file(GLOB SRC_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
+)
+
+add_library(vcu_model STATIC ${SRC_FILES})
+
+target_include_directories(vcu_model PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inc)
+
+
+
 if(DEFINED SIL_TESTING)
     add_subdirectory(sil)
 endif()
