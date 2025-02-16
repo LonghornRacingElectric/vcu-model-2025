@@ -19,10 +19,16 @@ typedef struct Timer {
         float time;
 } Timer;
 
-void Timer_init(Timer *timer, float duration);
-void Timer_reset(Timer *timer);
-void Timer_count(Timer *timer, float deltaTime);
-bool Timer_isFinished(Timer *timer);
+#ifdef __cplusplus
+extern "C" {
+#endif
+        void Timer_init(Timer *timer, float duration);
+        void Timer_reset(Timer *timer);
+        void Timer_count(Timer *timer, float deltaTime);
+        bool Timer_isFinished(Timer *timer);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //VCU_CORE_TIMER_H

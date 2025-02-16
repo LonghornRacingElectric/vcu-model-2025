@@ -53,7 +53,7 @@
 typedef struct VcuParameters {
     //APPS PARAMAETERS
     float appsPlausibilityRange; //(%)
-    float appsDeadZoneBottomPctf; // (%) of travel that is 0 or 100
+    float appsDeadZoneBottomPct; // (%) of travel that is 0 or 100
     float appsDeadZoneTopPct; // (%) of travel that is 0 or 100
     float appsImplausibilityTime; // (s)
 

@@ -5,7 +5,7 @@
  */
 
 void TorqueMap_evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime) {
-    float torqueRequest = params->mapPedalToTorqueRequest(input->apps);
+    float torqueRequest = Lookup1D_evaluate(&params->mapPedalToTorqueRequest, input->apps);
     float derate;
 
     //    if(input->motorRpm < 300.0f) {

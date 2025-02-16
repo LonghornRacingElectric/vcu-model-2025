@@ -4,11 +4,24 @@
 
 #include "../../inc/blocks/AppsProcessor.h"
 
-#include <iostream>
-#include <ostream>
+#include <ctype.h>
+
+#include "../inc/util/Timer.h"
+
 
 void AppsProcessor_evaluate(AppsProcessor* processor, VcuParameters *params, AppsProcessorInput *input,
                              AppsProcessorOutput *output, float deltaTime) {
+
+    bool apps1InRange =  (input->perc1 >= 0) && (input->perc1 <= 1.0);
+    bool apps12InRange =  (input->perc2 >= 0) && (input->perc2 <= 1.0);
+
+    if (!apps1InRange || !apps12InRange) {
+        output->ok = false;
+        output->perc = 0;
+        output->fault = APPS_OUT_OF_RANGE;
+        return;
+    }
+
     float diff = input->perc1 - input->perc2;
     if (diff < 0) {
         diff = -diff;

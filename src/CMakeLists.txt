@@ -1,5 +1,15 @@
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.c])
 set(SOURCES ${SOURCES}
+        ../inc/blocks/AppsProcessor.h
+        blocks/AppsProcessor.c
+        ../inc/blocks/Stompp.h
+        blocks/Stompp.c
+        ../inc/util/Lookup1D.h
+        util/Lookup1D.c
+        ../inc/blocks/TorqueMap.h
+        blocks/TorqueMap.c
+        ../inc/util/Timer.h
+        util/Timer.c
         ../inc/util/Debounce.h
         util/Debounce.c
         ../inc/util/LowPassFilter.h

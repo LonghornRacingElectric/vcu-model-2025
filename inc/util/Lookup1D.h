@@ -10,11 +10,17 @@ typedef struct Lookup1D {
     float y[11];
 } Lookup1D;
 
-void Lookup1D_initArray(Lookup1D* lookup1d, float x0, float x1, float y[], float n);
-void Lookup1D_print(Lookup1D* lookup1d);
-void Lookup1D_init(Lookup1D* lookup1d, float xP, float yP); // y = kx
-float Lookup1D_evaluate(Lookup1D* lookup1d, float x);
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void Lookup1D_initArray(Lookup1D* lookup1d, float x0, float x1, float y[], float n);
+    void Lookup1D_print(Lookup1D* lookup1d);
+    void Lookup1D_init(Lookup1D* lookup1d, float xP, float yP); // y = kx
+    float Lookup1D_evaluate(Lookup1D* lookup1d, float x);
 
+#ifdef __cplusplus
+}
+#endif
 
 // class Lookup1D {
 // private:

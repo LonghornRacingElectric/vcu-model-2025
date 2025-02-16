@@ -13,6 +13,7 @@
 
 #define APPS_OK 0x00 // 0000
 #define APPS_DISAGREE 0x01 // 0001
+#define APPS_OUT_OF_RANGE 0x02 // 0010
 
 
 #define APPS_SHUTDOWN_MASK (APPS_DISAGREE)
@@ -33,9 +34,19 @@ typedef struct AppsProcessor {
     Timer differenceClock;
 } AppsProcessor;
 
-void AppsProcessor_reset(AppsProcessor *processor);
-void AppsProcessor_evaluate(AppsProcessor *processor, VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
-void AppsProcessor_setParameters(AppsProcessor *processor, VcuParameters* params);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    // Function declarations
+    void AppsProcessor_setParameters(AppsProcessor*, VcuParameters*);
+    void AppsProcessor_evaluate(AppsProcessor*, VcuParameters*, AppsProcessorInput*, AppsProcessorOutput*, float);
+    void AppsProcessor_reset(AppsProcessor*);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 // class AppsProcessor {
 // public:

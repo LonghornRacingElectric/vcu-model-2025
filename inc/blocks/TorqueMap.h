@@ -27,9 +27,16 @@ typedef struct TorqueMapOutput {
     float torqueRequest; // torque (Nm)
 } TorqueMapOutput;
 
-void TorqueMap_setParameters(VcuParameters* params);
-void TorqueMap_evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void TorqueMap_setParameters(VcuParameters* params);
+    void TorqueMap_evaluate(VcuParameters *params, TorqueMapInput *input, TorqueMapOutput *output, float deltaTime);
+
+#ifdef __cplusplus
+}
+#endif
 // class TorqueMap {
 // public:
 //     void setParameters(VcuParameters* params);

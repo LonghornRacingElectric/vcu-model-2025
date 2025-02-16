@@ -6,6 +6,7 @@
 #define STOMPP_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 
 #include "../VcuParameters.h"
@@ -23,15 +24,22 @@ typedef struct StomppOutput {
 }StomppOutput;
 
 typedef struct Stompp {
-    bool stomppActive = false;
-} Struct;
+    bool stomppActive;
+} Stompp;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
- void Stompp_reset(Stompp* stompp);
- void Stompp_toggle(Stompp* stompp);
- void Stompp_setParameters(Stompp* stompp, VcuParameters *vcuParameters) {};
- void Stompp_evaluate(Stompp* stompp, VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
+     void Stompp_reset(Stompp* stompp);
+     void Stompp_toggle(Stompp* stompp);
+     void Stompp_setParameters(Stompp* stompp, VcuParameters *vcuParameters);
+     void Stompp_evaluate(Stompp* stompp, VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
 
+#ifdef __cplusplus
+}
+#endif
 // class Stompp {
 // public:
 //     void reset();
