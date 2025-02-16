@@ -1,6 +1,7 @@
 
 #include "../../inc/util/Lookup1D.h"
 //#include <cmath>
+#include "math.h"
 #include <string.h>
 //#include <iostream>
 
