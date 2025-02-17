@@ -5,11 +5,12 @@
 #include "VcuModel.h"
 
 
+
 void VcuModel_setParameters(VcuModel *vcu, VcuParameters *newParams) {
     vcu->params = newParams;
     AppsProcessor_setParameters(&vcu->appsProcessor, newParams);
 
-    Stompp_setParameters(&vcu->stompp, newParams);
+//    Stompp_setParameters(&vcu->stompp, newParams);
     TorqueMap_setParameters(newParams);
 
 }
@@ -36,6 +37,11 @@ vcu->appsProcessorInput.perc2 = vcuInput->apps2;
     vcu->stomppInput.bse = vcuInput->bse;
 
     Stompp_evaluate(&vcu->stompp, vcu->params, &vcu->stomppInput, &vcu->stomppOutput, deltaTime);
+
+    if(!vcu->stomppOutput.ok || !vcuInput->driveSwitch ) {
+        vcuOutput->ineverterTorqueRequests = 0;
+        return;
+    }
     //stompp.evaluate(params, &stomppInput, &stomppOutput, deltaTime);
 
 //    vcu->torqueMapInput = {
