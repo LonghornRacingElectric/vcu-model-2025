@@ -26,6 +26,8 @@ typedef struct VcuInput {
 typedef struct VcuOutput {
     //bool enableInverter;
     float ineverterTorqueRequests; // torque(Nm)
+    bool appsOk;
+    bool stomppOk;
 }VcuOutput;
 
 typedef struct VcuModel {

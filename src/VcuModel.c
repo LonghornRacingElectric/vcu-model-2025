@@ -70,6 +70,15 @@ vcu->appsProcessorInput.perc2 = vcuInput->apps2;
 //    };
 
     vcuOutput->ineverterTorqueRequests = vcu->torqueMapOutput.torqueRequest;
+    if (vcuInput->driveSwitch) {
+        vcuOutput->ineverterTorqueRequests = vcu->torqueMapOutput.torqueRequest;
+        vcuOutput->appsOk = vcu->appsProcessorOutput.ok;
+        vcuOutput->stomppOk = vcu->stomppOutput.ok;
+    } else {
+        vcuOutput->ineverterTorqueRequests = 0;
+        vcuOutput->appsOk = 0;
+        vcuOutput->stomppOk = 0;
+    }
 }
 
 
