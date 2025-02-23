@@ -15,7 +15,7 @@
 
 #define BATT_FAN_ON_THRESHOLD 30.0f
 #define BATT_FAN_FULL_SPEED_THRESHOLD 35.0f //shouldn't be higher than 60.0
-#define BATT_TEMP_DIFF_THRESHOLD = 2.5f
+#define BATT_TEMP_DIFF_THRESHOLD 2.5f
 
 typedef struct CoolingInput {
     float battRadInTemp; //different sensors

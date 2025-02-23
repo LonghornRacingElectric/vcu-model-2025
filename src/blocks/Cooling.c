@@ -76,7 +76,7 @@ void cooling_bat(VcuParameters *params, CoolingInput *input, CoolingOutput *outp
         Timer_count(&check, 1);
     }
     if (Timer_isFinished(&check)){ //timer is done
-        if (delta_temp < TBATT)EMP_DIFF_THRESHOLD) {
+        if (delta_temp < BATT_TEMP_DIFF_THRESHOLD) {
             fan_speed = 1.0f; // if hasn't cooled enough, max fan speed
         }
     }
