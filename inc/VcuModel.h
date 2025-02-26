@@ -9,75 +9,18 @@
 
 #include "VcuParameters.h"
 #include "blocks/AppsProcessor.h"
+#include "blocks/BrakeLight.h"
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
-#include "blocks/BrakeLight.h"
 
+typedef struct VCUModelInputs {
+    // STOMPP Inputs
+    STOMPPInputs stompp;
+} VCUModelInputs;
 
-typedef struct VcuInput {
-    float apps1; // apps1 percentage
-    float apps2; // apps2 percentage
+typedef struct VCUModelParameters {
+    STOMPPParameters stompp;
+    VcuParameters vcu;
+} VCUModelParameters;
 
-    float bse; // Assume i get one bse percentage/may change later
-
-    bool driveSwitch; // (true = D, false = P)
-
-} VcuInput;
-typedef struct VcuOutput {
-    //bool enableInverter;
-    float ineverterTorqueRequests; // torque(Nm)
-    bool appsOk;
-    bool stomppOk;
-}VcuOutput;
-
-typedef struct VcuModel {
-    VcuParameters *params;
-
-    AppsProcessor appsProcessor;
-    AppsProcessorInput appsProcessorInput;
-    AppsProcessorOutput appsProcessorOutput;
-
-    Stompp stompp;
-    StomppInput stomppInput;
-    StomppOutput stomppOutput;
-
-    //TorqueMap torqueMap;
-    TorqueMapInput torqueMapInput;
-    TorqueMapOutput torqueMapOutput;
-
-    // BreakLight breakLight;
-    // BreakLightInput breakLightInput;
-    // BreakLightOutput breakLightOutput;
-} VcuModel;
-
-void VcuModel_setParameters(VcuModel *vcu, VcuParameters *newParams);
-void VcuModel_evaluate(VcuModel *vcu, VcuInput *input, VcuOutput *output, float deltaTime);
-
-
-// class VcuModel {
-// private:
-//     //instatiate all block objects
-//     VcuParameters *params;
-//
-//     AppsProcessor appsProcessor;
-//     AppsProcessorInput appsProcessorInput;
-//     AppsProcessorOutput appsProcessorOutput;
-//
-//     Stompp stompp;
-//     StomppInput stomppInput;
-//     StomppOutput stomppOutput;
-//
-//     //TorqueMap torqueMap;
-//     TorqueMapInput torqueMapInput;
-//     TorqueMapOutput torqueMapOutput;
-//
-//     BreakLight breakLight;
-//     BreakLightInput breakLightInput;
-//     BreakLightOutput breakLightOutput;
-// public:
-//     void setParameters(VcuParameters *newParams);
-//     void evaluate(VcuInput *input, VcuOutput *output, float deltaTime);
-// };
-
-
-#endif //VCUMODEL_H
+#endif  // VCUMODEL_H

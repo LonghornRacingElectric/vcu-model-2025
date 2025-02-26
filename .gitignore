@@ -2,3 +2,11 @@
 build/
 cmake*
 .idea
+/.cmake
+/_deps
+*.cmake
+*.log
+.ninja_log
+.ninja_deps
+*.a
+*.ninja

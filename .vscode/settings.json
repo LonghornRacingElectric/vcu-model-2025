@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.c": "c",
+    "timer.h": "c",
+    "stompp.h": "c"
+  },
+  "C_Cpp.default.compilerPath": "/Users/dhairyagupta/development/arm/ArmGNUToolchain/13.3.Rel1/arm-none-eabi/bin/arm-none-eabi-gcc"
+}
