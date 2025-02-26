@@ -10,3 +10,4 @@ cmake*
 .ninja_deps
 *.a
 *.ninja
+tests/vcu_model_tests
