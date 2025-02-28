@@ -23,4 +23,6 @@ void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
     inputs->stompp.apps_percent = outputs->apps.pedalPercent;
 
     STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
+
+    TorqueMap_evaluate(&inputs->torque, &outputs->torque);
 }

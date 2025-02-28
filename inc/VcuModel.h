@@ -18,16 +18,19 @@
 typedef struct VCUModelInputs {
     APPSInputs apps;
     STOMPPInputs stompp;
+    TorqueMapInputs torque;
 } VCUModelInputs;
 
 typedef struct VCUModelOutputs {
     APPSOutputs apps;
     STOMPPOutputs stompp;
+    TorqueMapOutputs torque;
 } VCUModelOutputs;
 
 typedef struct VCUModelParameters {
     APPSParameters apps;
     STOMPPParameters stompp;
+    TorqueMapParameters torque;
 } VCUModelParameters;
 
 static VCUModelParameters model_parameters;
