@@ -60,3 +60,30 @@ TEST(AppsProcessor, BiasTest) {
     EXPECT_EQ(outputs.status, APPS_OK);
     EXPECT_FLOAT_EQ(0.35714284f, outputs.pedalPercent);
 }
+
+
+
+TEST(AppsProcessor, BiasNonHalf) {
+    APPSParameters params = {
+            .sensorInRangeUpperBound = 1.0f,
+            .sensorInRangeLowerBound = 0.0f,
+            .allowedPlausibilityRange = 0.1f,
+            .appsDeadzoneTopPercent = 0.0f,
+            .appsDeadzoneBottomPercent = 0.0f,
+            .appsMaxImplausibilityTime = 100.0f,
+            .pedal1Bias = 0.4f,
+    };
+
+    APPSInputs inputs;
+    APPSOutputs outputs;
+
+    inputs.pedal1Percent = 0.40f;
+    inputs.pedal2Percent = 0.45f;
+
+    APPSProcessor_set_parameters(&params);
+
+    APPSProcessor_evaluate(&inputs, &outputs, 0.01f);
+
+    EXPECT_EQ(outputs.status, APPS_OK);
+    EXPECT_FLOAT_EQ(0.43f, outputs.pedalPercent);
+}
