@@ -58,14 +58,18 @@ void APPSProcessor_evaluate(APPSInputs *inputs, APPSOutputs *output,
         (inputs->pedal1Percent * apps_params.pedal1Bias +
          inputs->pedal2Percent * (1.0f - apps_params.pedal1Bias));
 
+    printf("The value of appsNoDeadzone was %f\n", appsNoDeadzone);
+
     output->status = APPS_OK;  // we are good, no errors
 
     // the multiplier we need to use to get the actual output %
     float slope = 1.0f / (1.0f - apps_params.appsDeadzoneTopPercent -
                           apps_params.appsDeadzoneBottomPercent);
 
+    printf("The value of slope was %f\n", slope);
+
     if (appsNoDeadzone <= apps_params.appsDeadzoneBottomPercent) {
-        appsNoDeadzone = 0.0f;
+        output->pedalPercent = 0.0f;
     } else if (appsNoDeadzone >= (1.0f - apps_params.appsDeadzoneTopPercent)) {
         output->pedalPercent = 1.0f;  // max
     } else {
