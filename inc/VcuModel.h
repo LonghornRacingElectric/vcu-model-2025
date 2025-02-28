@@ -1,6 +1,8 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+ * Establishes inputs and evaluation for VCU Model
+ *
+ * Created by Dhairya & Henry on 2/26/2025
+ */
 
 #ifndef VCUMODEL_H
 #define VCUMODEL_H
@@ -16,6 +18,7 @@
 typedef struct VCUModelInputs {
     // STOMPP Inputs
     STOMPPInputs stompp;
+    APPSParameters apps;
 } VCUModelInputs;
 
 typedef struct VCUModelParameters {

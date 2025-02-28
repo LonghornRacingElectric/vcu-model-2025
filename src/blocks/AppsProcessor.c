@@ -1,69 +1,75 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+
+APPS Processor (Accelerator Pedal Pressure Sensors)
+
+View header file for more information
+
+Created by Dhairya & Henry on 2/27/2025
+
+*/
 
 #include "../../inc/blocks/AppsProcessor.h"
 
-#include <ctype.h>
+void APPSProcessor_set_parameters(APPSParameters *params) {
+    apps_params = *params;
 
-#include "../inc/util/Timer.h"
+    // set the timer duration
+    timer.duration = apps_params.appsMaxImplausibilityTime;
+}
 
+void APPSProcessor_evaluate(APPSInputs *inputs, APPSOutputs *output,
+                            float deltaTime) {
+    bool pedal1OutOfRange =
+        (inputs->pedal1Percent < apps_params.sensorInRangeLowerBound) ||
+        (inputs->pedal1Percent > apps_params.sensorInRangeUpperBound);
+    bool pedal2OutOfRange =
+        (inputs->pedal2Percent < apps_params.sensorInRangeLowerBound) ||
+        (inputs->pedal2Percent > apps_params.sensorInRangeUpperBound);
 
-void AppsProcessor_evaluate(AppsProcessor* processor, VcuParameters *params, AppsProcessorInput *input,
-                             AppsProcessorOutput *output, float deltaTime) {
-
-    bool apps1InRange =  (input->perc1 >= 0) && (input->perc1 <= 1.0);
-    bool apps12InRange =  (input->perc2 >= 0) && (input->perc2 <= 1.0);
-
-    if (!apps1InRange || !apps12InRange) {
-        output->ok = false;
-        output->perc = 0;
-        output->fault = APPS_OUT_OF_RANGE;
+    // A sensor is out of range -- throw error and don't allow car to drive.
+    if (pedal1OutOfRange || pedal2OutOfRange) {
+        output->pedalPercent = 0.0f;
+        output->status = APPS_OUT_OF_RANGE;
         return;
     }
 
-    float diff = input->perc1 - input->perc2;
-    if (diff < 0) {
-        diff = -diff;
-    }
+    float delta = inputs->pedal1Percent - inputs->pedal2Percent;
 
-    if (diff > params->appsPlausibilityRange) {
-        Timer_count(&processor->differenceClock, deltaTime);
+    if (delta < 0)
+        delta *= -1;  // invert in case it is negative (absolute value)
 
-        if (Timer_isFinished(&processor->differenceClock)) {
-            output->fault = APPS_DISAGREE;
-            output->ok = false;
-            output->perc = 0;
+    if (delta > apps_params.allowedPlausibilityRange) {
+        // run timer and if we exceed the amount of time allowed by the rules,
+        // we fault
+        Timer_count(&timer, deltaTime);
+        if (Timer_isFinished(&timer)) {
+            output->pedalPercent = 0.0f;
+            output->status = APPS_DISAGREE;
             return;
         }
     } else {
-        Timer_reset(&processor->differenceClock);
+        // we are within the valid range, reset the timer
+        Timer_reset(&timer);
     }
 
-    output->fault = APPS_OK;
-    output->ok = !(APPS_SHUTDOWN_MASK & output->fault);
+    // before accounting for the deadzone, what is our expected pedal %?
+    float appsNoDeadzone =
+        (inputs->pedal1Percent * apps_params.pedal1Bias +
+         inputs->pedal2Percent * (1.0f - apps_params.pedal1Bias));
 
-    // ASK ABOUT THIS
+    output->status = APPS_OK;  // we are good, no errors
 
-    float appsNoDeadzone = (input->perc1 + input->perc2) / 2;
-    float slope = 1.0f / (1.0f - params->appsDeadZoneTopPct -
-                          params->appsDeadZoneBottomPct);
+    // the multiplier we need to use to get the actual output %
+    float slope = 1.0f / (1.0f - apps_params.appsDeadzoneTopPercent -
+                          apps_params.appsDeadzoneBottomPercent);
 
-    if (appsNoDeadzone <= params->appsDeadZoneBottomPct) {
-        output->perc = 0;
-    } else if (appsNoDeadzone >= (1 - params->appsDeadZoneTopPct)) {
-        output->perc = 1;
+    if (appsNoDeadzone <= apps_params.appsDeadzoneBottomPercent) {
+        appsNoDeadzone = 0.0f;
+    } else if (appsNoDeadzone >= (1.0f - apps_params.appsDeadzoneTopPercent)) {
+        output->pedalPercent = 1.0f;  // max
     } else {
-        output->perc = slope * (appsNoDeadzone - params->appsDeadZoneBottomPct);
+        // somewhere in between, do some calculations
+        output->pedalPercent =
+            slope * (appsNoDeadzone - apps_params.appsDeadzoneBottomPercent);
     }
-    //std::cout << "perc " << output->perc << std::endl;
-}
-
-void AppsProcessor_reset(AppsProcessor* processor) {
-    Timer_reset(&processor->differenceClock);
-}
-void AppsProcessor_setParameters(AppsProcessor* processor, VcuParameters *params) {
-    // Ask about apps implausibility time
-     Timer_init(&processor->differenceClock, params->appsImplausibilityTime);
-    //this->differenceClock = Timer(params->appsImplausibilityTime);
 }

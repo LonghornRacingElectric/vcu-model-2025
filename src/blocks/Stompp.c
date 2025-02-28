@@ -9,18 +9,18 @@ Created by Dhairya & Henry on 2/26/2025
 #include "../../inc/blocks/Stompp.h"
 
 void STOMPP_set_parameters(STOMPPParameters *params) {
-    parameters =
+    stompp_params =
         *params;  // parameters is a static variable defined in the header
 }
 
 void STOMPP_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs) {
-    if (inputs->apps_percent >= parameters.stomppAppsCutoffThreshold &&
-        inputs->bse_percent >= parameters.mechanicalBrakeThreshold) {
+    if (inputs->apps_percent >= stompp_params.stomppAppsCutoffThreshold &&
+        inputs->bse_percent >= stompp_params.mechanicalBrakeThreshold) {
         // failed rules check, enable stompp
         STOMPP_enable(outputs);
-    } else if(stompp_active == true) {
+    } else if (stompp_active == true) {
         // stompp was already activated but is not currently hitting rules req.
-        if(inputs->apps_percent < parameters.stomppAppsRecoveryThreshold) {
+        if (inputs->apps_percent < stompp_params.stomppAppsRecoveryThreshold) {
             // allow stompp to be reset after falling below threshold
             STOMPP_disable(outputs);
         } else {
