@@ -16,15 +16,25 @@
 #include "blocks/TorqueMap.h"
 
 typedef struct VCUModelInputs {
-    // STOMPP Inputs
+    APPSInputs apps;
     STOMPPInputs stompp;
-    APPSParameters apps;
 } VCUModelInputs;
 
+typedef struct VCUModelOutputs {
+    APPSOutputs apps;
+    STOMPPOutputs stompp;
+} VCUModelOutputs;
+
 typedef struct VCUModelParameters {
-    STOMPPParameters stompp;
     APPSParameters apps;
-    VcuParameters vcu;
+    STOMPPParameters stompp;
 } VCUModelParameters;
+
+static VCUModelParameters model_parameters;
+
+void VCUModel_evaluate(VCUModelInputs *inputs, VCUModelOutputs *outputs,
+                       float deltaTime);
+
+void VCUModel_set_parameters(VCUModelParameters *parameters);
 
 #endif  // VCUMODEL_H
