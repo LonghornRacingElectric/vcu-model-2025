@@ -23,6 +23,7 @@ typedef struct VCUModelInputs {
 
 typedef struct VCUModelParameters {
     STOMPPParameters stompp;
+    APPSParameters apps;
     VcuParameters vcu;
 } VCUModelParameters;
 
