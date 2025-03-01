@@ -24,6 +24,8 @@ set(SOURCES ${SOURCES}
         blocks/Indicator.c
         ../inc/VcuModel.h
         VcuModel.c
+        ../inc/blocks/BrakeLight.h
+        blocks/BrakeLight.c
 )
 
 add_library(vcu_model_lib STATIC ${SOURCES})
