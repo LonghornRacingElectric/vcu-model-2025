@@ -11,3 +11,4 @@ cmake*
 *.a
 *.ninja
 tests/vcu_model_tests
+.vscode/settings.json

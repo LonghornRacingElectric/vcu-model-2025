@@ -24,5 +24,11 @@ void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
 
     STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
 
+    if (outputs->stompp.output != STOMPP_OK) {
+        outputs->apps.pedalPercent = 0.0f;
+    }
+
     TorqueMap_evaluate(&inputs->torque, &outputs->torque);
+
+    BrakeLight_evaluate(&inputs->brake_light, &outputs->brake_light, deltaTime);
 }

@@ -19,18 +19,25 @@ typedef struct VCUModelInputs {
     APPSInputs apps;
     STOMPPInputs stompp;
     TorqueMapInputs torque;
+
+    BrakeLightInputs brake_light;
 } VCUModelInputs;
 
 typedef struct VCUModelOutputs {
     APPSOutputs apps;
     STOMPPOutputs stompp;
     TorqueMapOutputs torque;
+
+    BrakeLightOutputs brake_light;
+
 } VCUModelOutputs;
 
 typedef struct VCUModelParameters {
     APPSParameters apps;
     STOMPPParameters stompp;
     TorqueMapParameters torque;
+
+    BrakeLightParameters brake_light;
 } VCUModelParameters;
 
 static VCUModelParameters model_parameters;
