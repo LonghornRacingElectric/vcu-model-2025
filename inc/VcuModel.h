@@ -16,6 +16,8 @@
 #include "blocks/TorqueMap.h"
 
 typedef struct VCUModelInputs {
+    bool drive_switch_active;
+
     APPSInputs apps;
     STOMPPInputs stompp;
     TorqueMapInputs torque;

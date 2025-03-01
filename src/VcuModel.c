@@ -17,16 +17,17 @@ void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
                        float deltaTime) {
     APPSProcessor_evaluate(&inputs->apps, &outputs->apps, deltaTime);
 
-    // TODO make sure drive switch is enabled before doing this
-
     // pass the APPS output into STOMPP
     inputs->stompp.apps_percent = outputs->apps.pedalPercent;
 
     STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
 
-    if (outputs->stompp.output != STOMPP_OK) {
+    // invalid state, car should not drive.
+    if (outputs->stompp.output != STOMPP_OK || !inputs->drive_switch_active) {
         outputs->apps.pedalPercent = 0.0f;
     }
+
+    inputs->torque.apps = outputs->apps.pedalPercent;
 
     TorqueMap_evaluate(&inputs->torque, &outputs->torque);
 
