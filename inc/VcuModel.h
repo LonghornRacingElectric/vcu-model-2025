@@ -1,6 +1,8 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+ * Establishes inputs and evaluation for VCU Model
+ *
+ * Created by Dhairya & Henry on 2/26/2025
+ */
 
 #ifndef VCUMODEL_H
 #define VCUMODEL_H
@@ -9,75 +11,42 @@
 
 #include "VcuParameters.h"
 #include "blocks/AppsProcessor.h"
+#include "blocks/BrakeLight.h"
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
-#include "blocks/BrakeLight.h"
 
+typedef struct VCUModelInputs {
+    bool drive_switch_active;
 
-typedef struct VcuInput {
-    float apps1; // apps1 percentage
-    float apps2; // apps2 percentage
+    APPSInputs apps;
+    STOMPPInputs stompp;
+    TorqueMapInputs torque;
 
-    float bse; // Assume i get one bse percentage/may change later
+    BrakeLightInputs brake_light;
+} VCUModelInputs;
 
-    bool driveSwitch; // (true = D, false = P)
+typedef struct VCUModelOutputs {
+    APPSOutputs apps;
+    STOMPPOutputs stompp;
+    TorqueMapOutputs torque;
 
-} VcuInput;
-typedef struct VcuOutput {
-    //bool enableInverter;
-    float ineverterTorqueRequests; // torque(Nm)
-    bool appsOk;
-    bool stomppOk;
-}VcuOutput;
+    BrakeLightOutputs brake_light;
 
-typedef struct VcuModel {
-    VcuParameters *params;
+} VCUModelOutputs;
 
-    AppsProcessor appsProcessor;
-    AppsProcessorInput appsProcessorInput;
-    AppsProcessorOutput appsProcessorOutput;
+typedef struct VCUModelParameters {
+    APPSParameters apps;
+    STOMPPParameters stompp;
+    TorqueMapParameters torque;
 
-    Stompp stompp;
-    StomppInput stomppInput;
-    StomppOutput stomppOutput;
+    BrakeLightParameters brake_light;
+} VCUModelParameters;
 
-    //TorqueMap torqueMap;
-    TorqueMapInput torqueMapInput;
-    TorqueMapOutput torqueMapOutput;
+static VCUModelParameters model_parameters;
 
-    // BreakLight breakLight;
-    // BreakLightInput breakLightInput;
-    // BreakLightOutput breakLightOutput;
-} VcuModel;
+void VCUModel_evaluate(VCUModelInputs *inputs, VCUModelOutputs *outputs,
+                       float deltaTime);
 
-void VcuModel_setParameters(VcuModel *vcu, VcuParameters *newParams);
-void VcuModel_evaluate(VcuModel *vcu, VcuInput *input, VcuOutput *output, float deltaTime);
+void VCUModel_set_parameters(VCUModelParameters *parameters);
 
-
-// class VcuModel {
-// private:
-//     //instatiate all block objects
-//     VcuParameters *params;
-//
-//     AppsProcessor appsProcessor;
-//     AppsProcessorInput appsProcessorInput;
-//     AppsProcessorOutput appsProcessorOutput;
-//
-//     Stompp stompp;
-//     StomppInput stomppInput;
-//     StomppOutput stomppOutput;
-//
-//     //TorqueMap torqueMap;
-//     TorqueMapInput torqueMapInput;
-//     TorqueMapOutput torqueMapOutput;
-//
-//     BreakLight breakLight;
-//     BreakLightInput breakLightInput;
-//     BreakLightOutput breakLightOutput;
-// public:
-//     void setParameters(VcuParameters *newParams);
-//     void evaluate(VcuInput *input, VcuOutput *output, float deltaTime);
-// };
-
-
-#endif //VCUMODEL_H
+#endif  // VCUMODEL_H

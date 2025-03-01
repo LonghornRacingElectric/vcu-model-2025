@@ -2,78 +2,88 @@
 // Created by henry on 12/20/2024.
 //
 
-
 #include <gtest/gtest.h>
-#include <src/gtest-internal-inl.h>
 
 #include "VcuParameters.h"
+
+extern "C" {
 #include "../inc/blocks/AppsProcessor.h"
+#include "../inc/blocks/Stompp.h"
+}
 
-TEST(AppsProcessor, AppsRulesCompliance) {
-    AppsProcessor appsProcessor;
-    AppsProcessorInput appsProcessorInput = {};
-    AppsProcessorOutput appsProcessorOutput = {};
+TEST(AppsProcessor, BasicCompliance) {
+    APPSParameters params = {
+            .sensorInRangeUpperBound = 1.0f,
+            .sensorInRangeLowerBound = 0.0f,
+            .allowedPlausibilityRange = 0.1f,
+            .appsDeadzoneTopPercent = 0.0f,
+            .appsDeadzoneBottomPercent = 0.0f,
+            .appsMaxImplausibilityTime = 100.0f,
+            .pedal1Bias = 0.5f,
+    };
 
-    VcuParameters vcuParameters;
+    APPSInputs inputs;
+    APPSOutputs outputs;
 
-    //APPS PARAMAETERS
-    vcuParameters.appsPlausibilityRange = 0.10f; //(%)
-    vcuParameters.appsDeadZoneBottomPct = 0.08f; // (%) of travel that is 0 or 100
-    vcuParameters.appsDeadZoneTopPct = 0.13f; // (%) of travel that is 0 or 100
-    vcuParameters.appsImplausibilityTime = 0.100f; // (s)
+    inputs.pedal1Percent = 0.45f;
+    inputs.pedal2Percent = 0.45f;
 
-    AppsProcessor_setParameters(&appsProcessor, &vcuParameters);
+    APPSProcessor_set_parameters(&params);
 
-    // Test 0% pedal travel
-    appsProcessorInput = {0.0f, 0.0f};
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 1.0f);
-    EXPECT_FLOAT_EQ(appsProcessorOutput.perc, 0.0f);
-    EXPECT_TRUE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
+    APPSProcessor_evaluate(&inputs, &outputs, 0.01f);
 
-    // Test 50% pedal travel
-    appsProcessorInput = {0.5f, 0.599f};
-    for(int i = 0; i < 100; i++)
-        AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.001f);
-    EXPECT_NEAR(appsProcessorOutput.perc, 0.5f, 0.1f);
-    EXPECT_TRUE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
+    EXPECT_EQ(outputs.status, APPS_OK);
+    EXPECT_FLOAT_EQ(outputs.pedalPercent, 0.45f);
+}
 
-    // Test 100% pedal travel
-    appsProcessorInput = {1.0f, 0.91f};
-    for(int i = 0; i < 100; i++)
-        AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.001f);
-    EXPECT_NEAR(appsProcessorOutput.perc, 1.0f, 0.001f);
-    EXPECT_TRUE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
+TEST(AppsProcessor, BiasTest) {
+    APPSParameters params = {
+            .sensorInRangeUpperBound = 1.0f,
+            .sensorInRangeLowerBound = 0.0f,
+            .allowedPlausibilityRange = 0.1f,
+            .appsDeadzoneTopPercent = 0.1f,
+            .appsDeadzoneBottomPercent = 0.2f,
+            .appsMaxImplausibilityTime = 100.0f,
+            .pedal1Bias = 0.5f,
+    };
 
-    // Test implausibility
-    appsProcessorInput = {1.0f, 0.0f};
+    APPSInputs inputs;
+    APPSOutputs outputs;
 
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 1.0f);
-    EXPECT_FALSE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
+    inputs.pedal1Percent = 0.45f;
+    inputs.pedal2Percent = 0.45f;
 
-    // Test out of bounds 1
-    appsProcessorInput = {-1.0f, -1.0f};
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 1.0f);
-    EXPECT_FALSE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
-    //
-    // // Test out of bounds 2
-    appsProcessorInput = {1.6f, 1.0f};
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 1.0f);
-    EXPECT_FALSE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
-    // // Test clock function
-    appsProcessorInput = {0.7f, 0.64f};
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.09f);
-    EXPECT_TRUE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
-    //
-    // // Test clock function
-    appsProcessorInput = {0.9f, 0.64f};
-    AppsProcessor_evaluate(&appsProcessor, &vcuParameters, &appsProcessorInput, &appsProcessorOutput, 0.11f);
-    EXPECT_FALSE(appsProcessorOutput.ok);
-    AppsProcessor_reset(&appsProcessor);
+    APPSProcessor_set_parameters(&params);
+
+    APPSProcessor_evaluate(&inputs, &outputs, 0.01f);
+
+    EXPECT_EQ(outputs.status, APPS_OK);
+    EXPECT_FLOAT_EQ(0.35714284f, outputs.pedalPercent);
+}
+
+
+
+TEST(AppsProcessor, BiasNonHalf) {
+    APPSParameters params = {
+            .sensorInRangeUpperBound = 1.0f,
+            .sensorInRangeLowerBound = 0.0f,
+            .allowedPlausibilityRange = 0.1f,
+            .appsDeadzoneTopPercent = 0.0f,
+            .appsDeadzoneBottomPercent = 0.0f,
+            .appsMaxImplausibilityTime = 100.0f,
+            .pedal1Bias = 0.4f,
+    };
+
+    APPSInputs inputs;
+    APPSOutputs outputs;
+
+    inputs.pedal1Percent = 0.40f;
+    inputs.pedal2Percent = 0.45f;
+
+    APPSProcessor_set_parameters(&params);
+
+    APPSProcessor_evaluate(&inputs, &outputs, 0.01f);
+
+    EXPECT_EQ(outputs.status, APPS_OK);
+    EXPECT_FLOAT_EQ(0.43f, outputs.pedalPercent);
 }
