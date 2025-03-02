@@ -39,7 +39,9 @@ typedef struct CoolingOutput {
 
 
 
-void Cooling_evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, int desiredRPM);
+void cooling_motor(CoolingInput *input, CoolingOutput *output);
+void cooling_bat(CoolingInput *input, CoolingOutput *output);
+
 
 
 #endif //COOLING_H

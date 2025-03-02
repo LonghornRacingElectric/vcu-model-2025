@@ -6,7 +6,7 @@
 #include "util/Timer.h"
 
 
-void cooling_motor(VcuParameters *params, CoolingInput *input, CoolingOutput *output){
+void cooling_motor(CoolingInput *input, CoolingOutput *output){
     output->pump1Output = 1.0f; //pumps for motor should be on all the time
     Lookup1D radLookup;
     Lookup1D_init(&radLookup, 1.0, 24.0);
@@ -43,7 +43,7 @@ void cooling_motor(VcuParameters *params, CoolingInput *input, CoolingOutput *ou
     output->motorFansOutput = fan_speed;
 }
 
-void cooling_bat(VcuParameters *params, CoolingInput *input, CoolingOutput *output){
+void cooling_bat(CoolingInput *input, CoolingOutput *output){
     if (input->battRadOutTemp >= input->ambientTemp){ //wait for battery temp to reach ambient temp
         output->pump2Output = 1.0f;
     }
