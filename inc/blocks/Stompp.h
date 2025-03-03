@@ -1,38 +1,48 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+
+STOMPP handles FSAE EV.4.7 (APPS / Brake Pedal Plausibility Check)
+
+Checks whether or not the current inputs on the APPS are past limits and follows
+the states provided in rules.
+
+Created by Dhairya & Henry on 2/26/2025
+
+*/
 
 #ifndef STOMPP_H
 #define STOMPP_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
+#include "../VcuParameters.h"
 
-#include "VcuParameters.h"
-#define STOMPP_OK 0x00
-#define STOMPP_FAULT 0x01
+enum STOMPP_OUTPUT { STOMPP_OK, STOMPP_FAULT };
 
-typedef struct StomppInput {
-    float pedal; // pedal travel (%)
-    float bse; // break (%)
-}StomppInput;
+typedef struct STOMPPInputs {
+    float apps_percent;  // percentages
+    float bse_percent;   // brake system encoder
+} STOMPPInputs;
 
-typedef struct StomppOutput {
-    uint32_t fault; // pedal travel (%)
-    bool ok; // break (%)
-}StomppOutput;
+typedef struct STOMPPOutputs {
+    enum STOMPP_OUTPUT output;  // STOMPP_OK is 0x0, non-zero if error/fault
+} STOMPPOutputs;
 
-
-class Stompp {
-public:
-    void reset();
-    void toggleStompp();
-    void setParameters(VcuParameters *vcuParameters);
-    void evaluate(VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime);
-private:
-    bool stomppActive = false;
-};
+typedef struct STOMPPParameters {
+    float mechanicalBrakeThreshold;   // Brake threshold % before pedals cut off
+                                      // (if the accelerator is also enabled)
+    float stomppAppsCutoffThreshold;  // Accelerator threshold % to use in
+                                      // tandem with brake threshold
+    float stomppAppsRecoveryThreshold;  // Accelerator min threshold to
+                                        // re-enable APPS
+} STOMPPParameters;
 
 
+void STOMPP_set_parameters(STOMPPParameters *params);
 
-#endif //STOMPP_H
+void STOMPP_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs);
+
+void STOMPP_enable(STOMPPOutputs *outputs);
+void STOMPP_disable(STOMPPOutputs *outputs);
+
+#endif  // STOMPP_H

@@ -1,44 +1,54 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+
+APPS Processor (Accelerator Pedal Pressure Sensors) -- To check rules compliance
+on accelerator pedals
+
+Created by Dhairya & Henry on 2/27/2025
+
+*/
 
 #ifndef APPSPROCESSOR_H
 #define APPSPROCESSOR_H
 
 #include <stdint.h>
 
-
-#include "VcuParameters.h"
+#include "../VcuParameters.h"
 #include "../util/Timer.h"
 
-#define APPS_OK 0x00 // 0000
-#define APPS_DISAGREE 0x01 // 0001
-
+enum APPS_STATUS {
+    APPS_OK = 0,           // 0x00
+    APPS_DISAGREE = 1,     // 0x01
+    APPS_OUT_OF_RANGE = 2  // 0x02
+};
 
 #define APPS_SHUTDOWN_MASK (APPS_DISAGREE)
 
+typedef struct APPSInputs {
+    float pedal1Percent;
+    float pedal2Percent;
+} APPSInputs;
 
-typedef struct AppsProcessorInput {
-    float perc1; // percentages are inverted one is invereted;
-    float perc2; // ;
-}AppsProcessorInput;
+typedef struct APPSOutputs {
+    enum APPS_STATUS status;
+    float pedalPercent;
+} APPSOutputs;
 
-typedef struct AppsProcessorOutput {
-    float perc; // pedal travel (%)
-    uint32_t fault;
-    bool ok;
-}AppsProcessorOutput;
-
-class AppsProcessor {
-public:
-    void reset();
-    void evaluate(VcuParameters* params, AppsProcessorInput* input, AppsProcessorOutput* output, float deltaTime);
-    void setParameters(VcuParameters* params);
-private:
-    //clocks and low pass filters
-    Timer differenceClock = Timer(0.1f); //why??
-};
+typedef struct APPSParameters {
+    float sensorInRangeUpperBound;   // G (NOT GEQ) is OUT OF BOUNDS
+    float sensorInRangeLowerBound;   // L (NOT LEQ) IS OUT OF BOUNDS
+    float allowedPlausibilityRange;  // ALLOWED TOLERANCE, INCLUSIVE
+    float appsDeadzoneTopPercent;    // Percent pedal travel that isn't possible
+    float appsDeadzoneBottomPercent;  // Percent pedal travel that isn't
+                                      // possible from the bottom (0%)
+    float appsMaxImplausibilityTime;  // max time the APPS can remain
+                                      // implausible before fully implausible
+    float pedal1Bias;  // how much to bias output percentage to pedal 1 vs 2
+} APPSParameters;
 
 
+void APPSProcessor_set_parameters(APPSParameters *parameters);
 
-#endif //APPSPROCESSOR_H
+void APPSProcessor_evaluate(APPSInputs *inputs, APPSOutputs *outputs,
+                            float deltaTime);
+
+#endif  // APPSPROCESSOR_H

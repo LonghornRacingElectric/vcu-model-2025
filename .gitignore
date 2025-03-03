@@ -1,3 +1,13 @@
 build/
 cmake*
 .idea
+/.cmake
+/_deps
+*.cmake
+*.log
+.ninja_log
+.ninja_deps
+*.a
+*.ninja
+tests/vcu_model_tests
+.vscode/settings.json
