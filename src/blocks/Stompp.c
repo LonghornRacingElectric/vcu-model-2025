@@ -45,6 +45,6 @@ void STOMPP_enable(STOMPPOutputs *outputs) {
 }
 
 void STOMPP_disable(STOMPPOutputs *outputs) {
-    stompp_active = true;
+    stompp_active = false;
     outputs->output = STOMPP_OK;
 }
