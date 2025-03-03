@@ -8,6 +8,12 @@ Created by Dhairya & Henry on 2/26/2025
 
 #include "../../inc/blocks/Stompp.h"
 
+static bool stompp_active =
+        false;  // keeps track of current state of stompp, so we
+// only re-enable if we fall below threshold
+
+static STOMPPParameters stompp_params;
+
 void STOMPP_set_parameters(STOMPPParameters *params) {
     stompp_params =
         *params;  // parameters is a static variable defined in the header

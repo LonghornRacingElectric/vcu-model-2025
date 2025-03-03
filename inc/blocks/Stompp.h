@@ -37,11 +37,6 @@ typedef struct STOMPPParameters {
                                         // re-enable APPS
 } STOMPPParameters;
 
-static bool stompp_active =
-    false;  // keeps track of current state of stompp, so we
-            // only re-enable if we fall below threshold
-
-static STOMPPParameters stompp_params;
 
 void STOMPP_set_parameters(STOMPPParameters *params);
 

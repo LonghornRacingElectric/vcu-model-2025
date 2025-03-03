@@ -22,9 +22,6 @@ typedef struct BrakeLightOutputs {
     bool lightOn;
 } BrakeLightOutputs;
 
-static BrakeLightParameters brake_light_params;
-
-static LowPassFilter brake_filter;
 
 void BrakeLight_setParameters(BrakeLightParameters* params);
 

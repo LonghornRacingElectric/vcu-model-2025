@@ -2,6 +2,10 @@
 
 #include "../../inc/util/LowPassFilter.h"
 
+static BrakeLightParameters brake_light_params;
+
+static LowPassFilter brake_filter;
+
 void BrakeLight_setParameters(BrakeLightParameters* params) {
     brake_light_params = *params;
 

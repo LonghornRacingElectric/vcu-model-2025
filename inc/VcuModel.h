@@ -40,7 +40,6 @@ typedef struct VCUModelParameters {
     BrakeLightParameters brake_light;
 } VCUModelParameters;
 
-static VCUModelParameters model_parameters;
 
 void VCUModel_evaluate(VCUModelInputs *inputs, VCUModelOutputs *outputs,
                        float deltaTime);

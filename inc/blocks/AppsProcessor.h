@@ -45,8 +45,6 @@ typedef struct APPSParameters {
     float pedal1Bias;  // how much to bias output percentage to pedal 1 vs 2
 } APPSParameters;
 
-static APPSParameters apps_params;
-static Timer timer;
 
 void APPSProcessor_set_parameters(APPSParameters *parameters);
 

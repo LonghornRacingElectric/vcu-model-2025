@@ -31,7 +31,6 @@ typedef struct TorqueMapParameters {
                                        // pedal travel (%)
 } TorqueMapParameters;
 
-static TorqueMapParameters torque_map_params;
 
 void TorqueMap_setParameters(TorqueMapParameters *params);
 

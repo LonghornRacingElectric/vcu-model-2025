@@ -4,6 +4,8 @@
  * Map a pedal travel percentage to a torque request.
  */
 
+static TorqueMapParameters torque_map_params;
+
 void TorqueMap_setParameters(TorqueMapParameters* params) {
     torque_map_params = *params;
 }

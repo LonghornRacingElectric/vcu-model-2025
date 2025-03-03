@@ -6,6 +6,8 @@
 
 #include "../inc/VcuModel.h"
 
+static VCUModelParameters model_parameters;
+
 void VCUModel_set_parameters(VCUModelParameters* parameters) {
     model_parameters = *parameters;
 
