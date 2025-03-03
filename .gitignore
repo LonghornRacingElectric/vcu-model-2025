@@ -11,3 +11,4 @@ cmake*
 *.ninja
 tests/vcu_model_tests
 .vscode/settings.json
+sil/pybind11/
