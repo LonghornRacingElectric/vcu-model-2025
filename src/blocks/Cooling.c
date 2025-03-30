@@ -8,13 +8,15 @@ static CoolingParameters cooling_params;
 static Lookup1D coolingMotor;
 
 static Lookup1D coolingBatt;
-void setParams(CoolingParameters *params){
+void Cooling_setParameters(CoolingParameters *params){
     cooling_params = *params;
-    Lookup1D_init(&coolingMotor, 20.0f, 1.0);
-    Lookup1D_init(&coolingBatt, 20.0f, 1.0);
+    coolingMotor.xP =  cooling_params.motor_fan_full_speed_threshold - cooling_params.motor_fan_on_threshold;
+    coolingMotor.yP = 1.0f;
+    coolingBatt.xP = cooling_params.batt_fan_full_speed_threshold - cooling_params.batt_fan_on_threshold;
+    coolingBatt.yP = 1.0f;
 }
 
-void cooling_motor(CoolingInput *input, CoolingOutput *output){
+void Cooling_motor_evaluate(CoolingInputs *input, CoolingOutputs *output){
     output->pump1Output = 1.0f; //pumps for motor should be on all the time
 
 
@@ -36,7 +38,7 @@ void cooling_motor(CoolingInput *input, CoolingOutput *output){
 
 }
 
-void cooling_bat(CoolingInput *input, CoolingOutput *output){
+void Cooling_batt_evaluate(CoolingInputs *input, CoolingOutputs *output){
     if (input->battRadOutTemp >= input->ambientTemp){ //wait for battery temp to reach ambient temp
         output->pump2Output = 1.0f;
     }

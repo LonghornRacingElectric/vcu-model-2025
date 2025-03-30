@@ -14,12 +14,13 @@
 #include "blocks/BrakeLight.h"
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
+#include "blocks/Cooling.h"
 
 typedef struct VCUModelInputs {
     APPSInputs apps;
     STOMPPInputs stompp;
     TorqueMapInputs torque;
-
+    CoolingInputs cooling;
     BrakeLightInputs brake_light;
 } VCUModelInputs;
 
@@ -27,7 +28,7 @@ typedef struct VCUModelOutputs {
     APPSOutputs apps;
     STOMPPOutputs stompp;
     TorqueMapOutputs torque;
-
+    CoolingOutputs cooling;
     BrakeLightOutputs brake_light;
 
 } VCUModelOutputs;
@@ -36,6 +37,7 @@ typedef struct VCUModelParameters {
     APPSParameters apps;
     STOMPPParameters stompp;
     TorqueMapParameters torque;
+    CoolingParameters cooling;
 
     BrakeLightParameters brake_light;
 } VCUModelParameters;

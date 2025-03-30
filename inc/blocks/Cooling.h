@@ -17,7 +17,7 @@
 //#define BATT_FAN_FULL_SPEED_THRESHOLD 35.0f //shouldn't be higher than 60.0
 //#define BATT_TEMP_DIFF_THRESHOLD 2.5f
 
-typedef struct CoolingInput {
+typedef struct CoolingInputs {
     float battRadInTemp; //different sensors
     float battRadOutTemp;
     float motorRadInTemp;
@@ -26,7 +26,7 @@ typedef struct CoolingInput {
     float ambientTemp;
     int battTach; // assumed in RPM
     int motorTach;
-} CoolingInput;
+} CoolingInputs;
 
 
 typedef struct CoolingOutput {
@@ -34,7 +34,7 @@ typedef struct CoolingOutput {
     float pump2Output;
     float motorFansOutput;
     float batteryFansOutput;
-} CoolingOutput;
+} CoolingOutputs;
 
 typedef struct CoolingParameters{
     float motor_fan_on_threshold;
@@ -44,7 +44,8 @@ typedef struct CoolingParameters{
 }CoolingParameters;
 
 
-void Cooling_evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, int desiredRPM);
-
+void Cooling_motor_evaluate(CoolingInputs *input, CoolingOutputs *output);
+void Cooling_batt_evaluate(CoolingInputs *input, CoolingOutputs *output);
+void Cooling_setParameters(CoolingParameters *params);
 
 #endif //COOLING_H
