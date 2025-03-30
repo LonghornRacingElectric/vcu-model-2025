@@ -9,13 +9,13 @@
 
 #include "../VcuParameters.h"
 
-#define MOTOR_FAN_ON_THRESHOLD 40.0f
-#define MOTOR_FAN_FULL_SPEED_THRESHOLD 60.0f
-#define MOTOR_TEMP_DIFF_THRESHOLD 5.0f
-
-#define BATT_FAN_ON_THRESHOLD 30.0f
-#define BATT_FAN_FULL_SPEED_THRESHOLD 35.0f //shouldn't be higher than 60.0
-#define BATT_TEMP_DIFF_THRESHOLD 2.5f
+//#define MOTOR_FAN_ON_THRESHOLD 40.0f
+//#define MOTOR_FAN_FULL_SPEED_THRESHOLD 60.0f
+//#define MOTOR_TEMP_DIFF_THRESHOLD 5.0f
+//
+//#define BATT_FAN_ON_THRESHOLD 30.0f
+//#define BATT_FAN_FULL_SPEED_THRESHOLD 35.0f //shouldn't be higher than 60.0
+//#define BATT_TEMP_DIFF_THRESHOLD 2.5f
 
 typedef struct CoolingInput {
     float battRadInTemp; //different sensors
@@ -36,6 +36,12 @@ typedef struct CoolingOutput {
     float batteryFansOutput;
 } CoolingOutput;
 
+typedef struct CoolingParameters{
+    float motor_fan_on_threshold;
+    float motor_fan_full_speed_threshold;
+    float batt_fan_on_threshold;
+    float batt_fan_full_speed_threshold;
+}CoolingParameters;
 
 
 void Cooling_evaluate(VcuParameters *params, CoolingInput *input, CoolingOutput *output, int desiredRPM);

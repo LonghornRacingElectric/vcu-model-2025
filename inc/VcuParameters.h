@@ -84,6 +84,10 @@ typedef struct VcuParameters {
     // ==== COOLING PARAMETERS =====
     Lookup1D  coolingBattery;
     Lookup1D  coolingMotor;
+    float motor_fan_on_threshold;
+    float motor_fan_full_speed_threshold;
+    float batt_fan_on_threshold;
+    float batt_fan_full_speed_threshold;
 
 
     //TORQUE MAP
