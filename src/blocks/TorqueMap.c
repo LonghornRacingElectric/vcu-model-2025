@@ -9,8 +9,9 @@ static TorqueMapParameters torque_map_params;
 void TorqueMap_setParameters(TorqueMapParameters* params) {
     torque_map_params = *params;
     Lookup1D_init(&torque_map_params.mapPedalToTorqueRequest);
+    LowPassFilter_init(&torque_map_params.openCircuitVoltageFilter, 0.0f); // Initialize with a suitable time constant
+    LowPassFilter_init(&torque_map_params.currentOvershootFilter, 0.0f); // Initialize with a suitable time constant
 }
-
 void TorqueMap_evaluate(TorqueMapInputs* inputs, TorqueMapOutputs* outputs) {
     float torqueRequest = Lookup1D_evaluate(
         &torque_map_params.mapPedalToTorqueRequest, inputs->apps);
