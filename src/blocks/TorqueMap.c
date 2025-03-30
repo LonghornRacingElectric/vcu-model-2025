@@ -8,6 +8,7 @@ static TorqueMapParameters torque_map_params;
 
 void TorqueMap_setParameters(TorqueMapParameters* params) {
     torque_map_params = *params;
+    Lookup1D_init(&torque_map_params.mapPedalToTorqueRequest);
 }
 
 void TorqueMap_evaluate(TorqueMapInputs* inputs, TorqueMapOutputs* outputs) {

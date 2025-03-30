@@ -4,14 +4,15 @@
 typedef struct Lookup1D {
     float x0;
     float x1;
-    float n;
+    float xP;
+    float yP;
     float y[11];
 } Lookup1D;
 
 void Lookup1D_initArray(Lookup1D* lookup1d, float x0, float x1, float y[],
                         float n);
 void Lookup1D_print(Lookup1D* lookup1d);
-void Lookup1D_init(Lookup1D* lookup1d, float xP, float yP);  // y = kx
+void Lookup1D_init(Lookup1D* lookup1d);  // y = kx
 float Lookup1D_evaluate(Lookup1D* lookup1d, float x);
 
 #endif
