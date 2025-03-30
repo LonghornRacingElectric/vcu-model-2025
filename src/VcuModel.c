@@ -1,79 +1,36 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+ * Establishes inputs and evaluation for VCU Model
+ *
+ * Created by Dhairya & Henry on 2/26/2025
+ */
 
-#include "VcuModel.h"
+#include "../inc/VcuModel.h"
 
+static VCUModelParameters model_parameters;
 
+void VCUModel_set_parameters(VCUModelParameters* parameters) {
+    model_parameters = *parameters;
 
-void VcuModel_setParameters(VcuModel *vcu, VcuParameters *newParams) {
-    vcu->params = newParams;
-    AppsProcessor_setParameters(&vcu->appsProcessor, newParams);
-
-//    Stompp_setParameters(&vcu->stompp, newParams);
-    TorqueMap_setParameters(newParams);
-
+    APPSProcessor_set_parameters(&parameters->apps);
+    STOMPP_set_parameters(&parameters->stompp);
+    TorqueMap_setParameters(&parameters->torque);
 }
 
-void VcuModel_evaluate(VcuModel* vcu, VcuInput *vcuInput, VcuOutput *vcuOutput, float deltaTime) {
-//    vcu->appsProcessorInput = {
-//        vcuInput->apps1,
-//        vcuInput->apps2
-//    };
+void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
+                       float deltaTime) {
+    APPSProcessor_evaluate(&inputs->apps, &outputs->apps, deltaTime);
 
-vcu->appsProcessorInput.perc1 = vcuInput->apps1;
-vcu->appsProcessorInput.perc2 = vcuInput->apps2;
+    // TODO make sure drive switch is enabled before doing this
+    // pass the APPS output into STOMPP
+    inputs->stompp.apps_percent = outputs->apps.pedalPercent;
 
-    AppsProcessor_evaluate(&vcu->appsProcessor, vcu->params, &vcu->appsProcessorInput, &vcu->appsProcessorOutput, deltaTime);
-    //appsProcessor.evaluate(params, &appsProcessorInput, &appsProcessorOutput, deltaTime);
+    STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
 
-//    vcu->stomppInput = {
-//        vcu->appsProcessorOutput.perc,
-//        vcuInput->bse
-//    };
-
-
-    vcu->stomppInput.pedal = vcu->appsProcessorOutput.perc;
-    vcu->stomppInput.bse = vcuInput->bse;
-
-    Stompp_evaluate(&vcu->stompp, vcu->params, &vcu->stomppInput, &vcu->stomppOutput, deltaTime);
-
-    if(!vcu->stomppOutput.ok || !vcuInput->driveSwitch ) {
-        vcuOutput->ineverterTorqueRequests = 0;
-        return;
+    if (outputs->stompp.output != STOMPP_OK) {
+        outputs->apps.pedalPercent = 0.0f;
     }
-    //stompp.evaluate(params, &stomppInput, &stomppOutput, deltaTime);
 
-//    vcu->torqueMapInput = {
-//        vcu->appsProcessorOutput.perc,
-//        // vcuInput->motorTemp,
-//        // vcuInput->motorRpm,
-//        // vcuInput->inverterTemp,
-//        // vcuInput->hvBatteryTemp,
-//        // vcuInput->hvBatterySoc,
-//        // vcuInput->hvBatteryVoltage,
-//        // vcuInput->hvBatteryCurrent,
-//    };
-
-    vcu->torqueMapInput.apps = vcu->appsProcessorOutput.perc;
-
-    TorqueMap_evaluate(vcu->params, &vcu->torqueMapInput, &vcu->torqueMapOutput, deltaTime);
-    //torqueMap.evaluate(params, &torqueMapInput, &torqueMapOutput, deltaTime);
-
-    // breakLightInput = {
-    //     vcuInput->bse
-    // };
-    // breakLight.evaluate(params, &breakLightInput, &breakLightOutput, deltaTime);
-
-//    *vcuOutput = {
-//        vcu->torqueMapOutput.torqueRequest
-//    };
-
-    vcuOutput->ineverterTorqueRequests = vcu->torqueMapOutput.torqueRequest;
+    inputs->torque.apps = outputs->apps.pedalPercent;
+    TorqueMap_evaluate(&inputs->torque, &outputs->torque);
+    BrakeLight_evaluate(&inputs->brake_light, &outputs->brake_light, deltaTime);
 }
-
-
-#ifdef VCU_FIRMWARE_2025_SIL_H
-#include "sil/pybind11/pybind11.h"
-
-#endif

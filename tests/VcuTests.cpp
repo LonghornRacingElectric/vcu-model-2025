@@ -1,42 +1,42 @@
 
 #include <gtest/gtest.h>
-#include "VcuModel.h"
 
-TEST(Vcu, NormalTorqueRequests) {
-  VcuModel vcuModel;
-  VcuParameters params;
-  VcuInput input;
-  VcuOutput output;
+extern "C" {
+    #include "../inc/VcuModel.h"
+}
 
-  // vcuModel.setParameters(&params);
-  //
-  // input.bse = 0.0;
-  //
-  // // apps 0%
-  // input.apps1 = 0.0f;
-  // input.apps2 = 0.02f;
-  // vcuModel.evaluate(&input, &output, 0.1f);
-  // EXPECT_NEAR(output.ineverterTorqueRequests, 0.0f, 1.0f);
-  // printf("\napps: %.2f V, %.2f V\n", input.apps1, input.apps2);
-  // printf("torque request: %.2f Nm\n", output.ineverterTorqueRequests);
-  //
-  // // apps 50%
-  // input.apps1 = 0.5f;
-  // input.apps2 = 0.5f;
-  // vcuModel.evaluate(&input, &output, 0.1f);
-  // EXPECT_NEAR(output.ineverterTorqueRequests, 115.0f, 10.0f);
-  // printf("\napps: %.2f V, %.2f V\n", input.apps1, input.apps2);
-  // printf("torque request: %.2f Nm\n", output.ineverterTorqueRequests);
-  //
-  // // apps 100%
-  // input.apps1 = 0.91;
-  // input.apps2 = 1.0f;
-  // vcuModel.evaluate(&input, &output, 0.1f);
-  // EXPECT_NEAR(output.ineverterTorqueRequests, 230.0f, 1.0f);
-  // printf("\napps: %.2f V, %.2f V\n", input.apps1, input.apps2);
-  // printf("torque request: %.2f Nm\n", output.ineverterTorqueRequests);
+TEST(Vcu, NormalTest) {
+    VCUModelParameters params = {
+            .apps = {
+                    .sensorInRangeUpperBound = 1.0f,
+                    .sensorInRangeLowerBound = 0.0f,
+                    .allowedPlausibilityRange = 0.1f,
+                    .appsDeadzoneTopPercent = 0.0f,
+                    .appsDeadzoneBottomPercent = 0.0f,
+                    .appsMaxImplausibilityTime = 100.0f,
+                    .pedal1Bias = 0.5f,
+            },
+            .stompp = {
+                .mechanicalBrakeThreshold = 0.03f,
+                .stomppAppsCutoffThreshold = 0.25f,
+                .stomppAppsRecoveryThreshold = 0.05f,
+            },
+    };
 
-  printf("\n\n");
+    VCUModel_set_parameters(&params);
 
+    VCUModelInputs inputs = {
+            .apps = {
+                    .pedal1Percent = 0.45f,
+                    .pedal2Percent = 0.45f
+            },
+            .stompp = {
+                .apps_percent = 0.0f,
+                .bse_percent = 0.35f
+            }
+    };
 
+    VCUModelOutputs outputs;
+
+    VCUModel_evaluate(&inputs, &outputs, 0.01f);
 }

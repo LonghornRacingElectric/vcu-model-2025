@@ -1,49 +1,50 @@
-//
-// Created by henry on 10/27/2024.
-//
+/*
+
+STOMPP - See header file for details.
+
+Created by Dhairya & Henry on 2/26/2025
+
+*/
 
 #include "../../inc/blocks/Stompp.h"
 
-void Stompp_evaluate(Stompp* stompp, VcuParameters *params, StomppInput *input, StomppOutput *output, float deltatime) {
-    //"stomppActive = false" means "output.ok = true"
-    //"output.ok = true" means motor functions normally
+static bool stompp_active =
+        false;  // keeps track of current state of stompp, so we
+// only re-enable if we fall below threshold
 
-    //"stomppActive = true" means "output.ok = false"
-    //"output.ok = false" means motor is disabled
+static STOMPPParameters stompp_params;
 
-    //Check for two main requirements. Enable STOMPP IF:
-    //  Brakes are active
-    //  Accelerator Travel > 25%
+void STOMPP_set_parameters(STOMPPParameters *params) {
+    stompp_params =
+        *params;  // parameters is a static variable defined in the header
+}
 
-    //Check for two main requirements. Enable STOMPP IF:
-    //  Brakes are active
-    //  Accelerator Travel > 25%
-    if ((input->bse > params->stomppMechanicalBrakesThreshold) && (input->pedal > params->stomppAppsCutoffThreshold)) {
-        output->ok = false;
-        stompp->stomppActive = true;
-    }
-    //To disable STOMPP, Accelerator Travel must fall under 5%
-    if (stompp->stomppActive) {
-        output->ok = false;
-        if (input->pedal < params->stomppAppsRecoveryThreshold) {
-            output->ok = true;
-            stompp->stomppActive = false;
+void STOMPP_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs) {
+    if (inputs->apps_percent >= stompp_params.stomppAppsCutoffThreshold &&
+        inputs->bse_percent >= stompp_params.mechanicalBrakeThreshold) {
+        // failed rules check, enable stompp
+        STOMPP_enable(outputs);
+    } else if (stompp_active == true) {
+        // stompp was already activated but is not currently hitting rules req.
+        if (inputs->apps_percent < stompp_params.stomppAppsRecoveryThreshold) {
+            // allow stompp to be reset after falling below threshold
+            STOMPP_disable(outputs);
+        } else {
+            // keep stompp activated and output faulted
+            STOMPP_enable(outputs);
         }
+    } else {
+        // stompp was not active and never hit the rules limit, keep it off
+        STOMPP_disable(outputs);
     }
-
-    //Check if STOMPP has been disabled
-    if (!stompp->stomppActive)
-        output->ok = true;
-
-    output->fault = (!output->ok) * STOMPP_FAULT;
 }
 
-void Stompp_reset(Stompp* stompp) {
-    stompp->stomppActive = false;
-}
-void Stompp_toggle(Stompp* stompp) {
-    stompp->stomppActive = true;
+void STOMPP_enable(STOMPPOutputs *outputs) {
+    stompp_active = true;
+    outputs->output = STOMPP_FAULT;
 }
 
-
-
+void STOMPP_disable(STOMPPOutputs *outputs) {
+    stompp_active = false;
+    outputs->output = STOMPP_OK;
+}
