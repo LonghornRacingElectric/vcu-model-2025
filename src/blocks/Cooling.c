@@ -3,19 +3,20 @@
 //
 
 #include "../../inc/blocks/Cooling.h"
-#include "util/Timer.h"
-
 static CoolingParameters cooling_params;
 
+static Lookup1D coolingMotor;
 
+static Lookup1D coolingBatt;
 void setParams(CoolingParameters *params){
     cooling_params = *params;
+    Lookup1D_init(&coolingMotor, 20.0f, 1.0);
+    Lookup1D_init(&coolingBatt, 20.0f, 1.0);
 }
 
 void cooling_motor(CoolingInput *input, CoolingOutput *output){
     output->pump1Output = 1.0f; //pumps for motor should be on all the time
-    Lookup1D coolingMotor;
-    Lookup1D_init(&coolingMotor, 20.0f, 1.0);
+
 
     //temp thresholds
 
@@ -46,8 +47,6 @@ void cooling_bat(CoolingInput *input, CoolingOutput *output){
     float fan_speed = 0.0f;
 
     //look up table
-    Lookup1D coolingLookup;
-    Lookup1D_init(&coolingLookup, 20.0f, 1.0);
 
 
     if (input->battRadInTemp >= cooling_params.batt_fan_on_threshold || input->battRadOutTemp >= cooling_params.batt_fan_on_threshold){
@@ -55,7 +54,7 @@ void cooling_bat(CoolingInput *input, CoolingOutput *output){
             fan_speed = 1.0f;
         }
         else{
-            fan_speed = Lookup1D_evaluate(&coolingLookup, input->battRadOutTemp);
+            fan_speed = Lookup1D_evaluate(&coolingBatt, input->battRadOutTemp);
         }
     }
     output->batteryFansOutput = fan_speed;
