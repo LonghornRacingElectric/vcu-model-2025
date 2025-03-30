@@ -22,7 +22,7 @@ void TorqueMap_evaluate(TorqueMapInputs* inputs, TorqueMapOutputs* outputs) {
 
     LowPassFilter_add(&torque_map_params.openCircuitVoltageFilter,inputs->batteryVoltage, torque_map_params.deltaTime);
     }
-    float openCircuitVoltage = LowPassFilter_get(&torque_map_params.openCircuitVoltageFilter)
+float openCircuitVoltage = LowPassFilter_get(&torque_map_params.openCircuitVoltageFilter);
     float internalResistance = 0.750; // Ohms, estimated
 
     float currentLimit = 200.0f; // Amps (reduced from 230A)
