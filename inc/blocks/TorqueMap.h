@@ -7,6 +7,7 @@ Created by Dhairya on 2/28/2025
 */
 
 #include "../util/Lookup1D.h"
+#include "../util/LowPassFilter.h"
 
 #ifndef TORQUEMAP_H
 #define TORQUEMAP_H
@@ -28,7 +29,15 @@ typedef struct TorqueMapOutputs {
 
 typedef struct TorqueMapParameters {
     Lookup1D mapPedalToTorqueRequest;  // torque request (Nm) as a function of
-                                       // pedal travel (%)
+    float integral;
+    float prevError;
+    LowPassFilter openCircuitVoltageFilter;
+    LowPassFilter currentOvershootFilter;
+    float deltaTime;
+    float mapPowerLimit;
+    float kp;
+    float ki;
+    float kd;
 } TorqueMapParameters;
 
 
