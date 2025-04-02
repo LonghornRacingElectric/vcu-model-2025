@@ -46,6 +46,10 @@ float openCircuitVoltage = LowPassFilter_get(&torque_map_params.openCircuitVolta
     if(torque_map_params.integral > 0) {
         torque_map_params.integral = 0;
     }
+    float integralMin = -100.0f; // Example value, tune as needed
+    if (torque_map_params.integral < integralMin) {
+        torque_map_params.integral = integralMin;
+    }
     if(powerError > 0) {
         powerError = 0;
     }
@@ -59,8 +63,6 @@ float openCircuitVoltage = LowPassFilter_get(&torque_map_params.openCircuitVolta
     if(torqueRequest < 0) {
         torqueRequest = 0;
     }
-
-    outputs->torqueRequest = torqueRequest;
 
     // outputs->ocvEstimate = openCircuitVoltage;
     // outputs->powerLimit = powerLimit;
