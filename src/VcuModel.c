@@ -28,6 +28,7 @@ void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
     if (outputs->stompp.output != STOMPP_OK || !inputs->drive_switch_enabled) {
         outputs->apps.pedalPercent = 0.0f;
     }
+
     Cooling_batt_evaluate(&inputs->cooling, &outputs->cooling);
     Cooling_motor_evaluate(&inputs->cooling, &outputs->cooling);
     inputs->torque.apps = outputs->apps.pedalPercent;
