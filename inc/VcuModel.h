@@ -22,6 +22,7 @@ typedef struct VCUModelInputs {
     TorqueMapInputs torque;
     CoolingInputs cooling;
     BrakeLightInputs brake_light;
+    bool drive_switch_enabled;
 } VCUModelInputs;
 
 typedef struct VCUModelOutputs {

@@ -20,12 +20,12 @@ void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
                        float deltaTime) {
     APPSProcessor_evaluate(&inputs->apps, &outputs->apps, deltaTime);
 
-    // TODO make sure drive switch is enabled before doing this
     // pass the APPS output into STOMPP
     inputs->stompp.apps_percent = outputs->apps.pedalPercent;
 
     STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
-    if (outputs->stompp.output != STOMPP_OK) {
+
+    if (outputs->stompp.output != STOMPP_OK || !inputs->drive_switch_enabled) {
         outputs->apps.pedalPercent = 0.0f;
     }
     Cooling_batt_evaluate(&inputs->cooling, &outputs->cooling);
