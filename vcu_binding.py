@@ -389,10 +389,10 @@ if __name__ == "__main__":
         vcu_params.apps.sensorInRangeUpperBound = 1.0
         vcu_params.apps.sensorInRangeLowerBound = 0.0
         vcu_params.apps.allowedPlausibilityRange = 0.10
-        vcu_params.apps.appsDeadzoneTopPercent = 0.90
+        vcu_params.apps.appsDeadzoneTopPercent = 0.10
         vcu_params.apps.appsDeadzoneBottomPercent = 0.10
         vcu_params.apps.appsMaxImplausibilityTime = 0.100
-        vcu_params.apps.pedal1Bias = 0.5  # Example bias
+        vcu_params.apps.pedal1Bias = 0.5
 
         # STOMPP Parameters
         vcu_params.stompp.mechanicalBrakeThreshold = 0.10
@@ -405,11 +405,6 @@ if __name__ == "__main__":
         vcu_params.torque.mapPedalToTorqueRequest.x1 = 1.0
         vcu_params.torque.mapPedalToTorqueRequest.xP = 1.0
         vcu_params.torque.mapPedalToTorqueRequest.yP = 230.0
-        # Populate the 'y' array for the lookup table
-        for i in range(11):
-            vcu_params.torque.mapPedalToTorqueRequest.y[i] = (
-                i / 10.0
-            ) * 200.0  # Linear example
 
         # Cooling Parameters
         vcu_params.cooling.motor_fan_on_threshold = 40.0
@@ -432,18 +427,16 @@ if __name__ == "__main__":
 
         # 4. Simulate multiple steps
         deltaTime = 0.01  # Example delta time (10ms)
-        num_steps = 5
+        num_steps = 1_000
 
         print(f"\nSimulating {num_steps} steps with dt={deltaTime}s...")
 
         for step in range(num_steps):
             # Populate Inputs for this step (replace with actual test inputs)
             # APPS Inputs
-            pedal_sim = (
-                (step / (num_steps - 1)) if num_steps > 1 else 0.5
-            )  # Simulate pedal press 0 -> 1
+            pedal_sim = (step / (num_steps)) if num_steps > 1 else 0.5
             vcu_inputs.apps.pedal1Percent = pedal_sim
-            vcu_inputs.apps.pedal2Percent = pedal_sim  # Assume sensors agree for now
+            vcu_inputs.apps.pedal2Percent = pedal_sim
 
             # STOMPP Inputs
             vcu_inputs.stompp.apps_percent = pedal_sim
