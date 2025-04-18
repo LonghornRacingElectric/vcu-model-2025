@@ -9,7 +9,6 @@ Created by Dhairya & Henry on 2/27/2025
 */
 
 #include "../../inc/blocks/AppsProcessor.h"
-#include "stdio.h"
 
 static APPSParameters apps_params;
 static Timer timer;
