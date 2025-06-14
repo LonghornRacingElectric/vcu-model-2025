@@ -24,6 +24,8 @@ enum APPS_STATUS {
 #define APPS_SHUTDOWN_MASK (APPS_DISAGREE)
 
 typedef struct APPSInputs {
+    float pedal1Voltage;
+    float pedal2Voltage;
     float pedal1Percent;
     float pedal2Percent;
 } APPSInputs;
