@@ -14,18 +14,20 @@ void VCUModel_set_parameters(VCUModelParameters* parameters) {
     STOMPP_set_parameters(&parameters->stompp);
     TorqueMap_setParameters(&parameters->torque);
     Cooling_setParameters(&parameters->cooling);
+    ParkDriveSystem_set_parameters(&parameters);
 }
 
 void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
                        float deltaTime) {
     APPSProcessor_evaluate(&inputs->apps, &outputs->apps, deltaTime);
+    ParkDriveSystem_evaluate(&inputs, &outputs, deltaTime);
 
     // pass the APPS output into STOMPP
     inputs->stompp.apps_percent = outputs->apps.pedalPercent;
 
     STOMPP_evaluate(&inputs->stompp, &outputs->stompp);
 
-    if (outputs->stompp.output != STOMPP_OK || !inputs->drive_switch_enabled) {
+    if (outputs->stompp.output != STOMPP_OK) {
         outputs->apps.pedalPercent = 0.0f;
     }
 

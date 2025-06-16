@@ -15,6 +15,7 @@
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
 #include "blocks/Cooling.h"
+#include "blocks/ParkDriveSystem.h"
 
 typedef struct VCUModelInputs {
     APPSInputs apps;
@@ -23,6 +24,7 @@ typedef struct VCUModelInputs {
     CoolingInputs cooling;
     BrakeLightInputs brake_light;
     bool drive_switch_enabled;
+    bool tractive_system_active;
 } VCUModelInputs;
 
 typedef struct VCUModelOutputs {
@@ -32,6 +34,8 @@ typedef struct VCUModelOutputs {
     CoolingOutputs cooling;
     BrakeLightOutputs brake_light;
 
+    bool buzzer_enable;
+    bool drive_enable;
 } VCUModelOutputs;
 
 typedef struct VCUModelParameters {
