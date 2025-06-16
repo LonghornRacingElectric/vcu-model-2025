@@ -14,7 +14,7 @@ void VCUModel_set_parameters(VCUModelParameters* parameters) {
     STOMPP_set_parameters(&parameters->stompp);
     TorqueMap_setParameters(&parameters->torque);
     Cooling_setParameters(&parameters->cooling);
-    ParkDriveSystem_set_parameters(&parameters);
+    ParkDriveSystem_set_parameters(&parameters->stompp);
 }
 
 void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
