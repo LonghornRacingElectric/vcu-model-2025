@@ -20,7 +20,8 @@ void VCUModel_set_parameters(VCUModelParameters* parameters) {
 void VCUModel_evaluate(VCUModelInputs* inputs, VCUModelOutputs* outputs,
                        float deltaTime) {
     APPSProcessor_evaluate(&inputs->apps, &outputs->apps, deltaTime);
-    ParkDriveSystem_evaluate(&inputs, &outputs, deltaTime);
+    ParkDriveSystem_evaluate(&inputs->stompp, &outputs->stompp, inputs->drive_switch_enabled,
+                             inputs->tractive_system_active, deltaTime);
 
     // pass the APPS output into STOMPP
     inputs->stompp.apps_percent = outputs->apps.pedalPercent;

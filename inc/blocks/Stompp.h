@@ -26,6 +26,7 @@ typedef struct STOMPPInputs {
 
 typedef struct STOMPPOutputs {
     enum STOMPP_OUTPUT output;  // STOMPP_OK is 0x0, non-zero if error/fault
+    bool drive_enable, buzzer_enable;
 } STOMPPOutputs;
 
 typedef struct STOMPPParameters {
