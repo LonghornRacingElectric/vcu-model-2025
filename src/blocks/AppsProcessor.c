@@ -9,70 +9,82 @@ Created by Dhairya & Henry on 2/27/2025
 */
 
 #include "../../inc/blocks/AppsProcessor.h"
+#include <util/LowPassFilter.h>
 
-static APPSParameters apps_params;
-static Timer timer;
+static AppsParameters appsParams;
 
-void APPSProcessor_set_parameters(APPSParameters *params) {
-    apps_params = *params;
+static Timer implausibilityTimer;
+static LowPassFilter apps1Filter;
+static LowPassFilter apps2Filter;
 
-    // set the timer duration
-    timer.duration = apps_params.appsMaxImplausibilityTime;
+
+
+void AppsProcessor_setParams(AppsParameters *params) {
+    appsParams = *params;
+
+    implausibilityTimer.duration = appsParams.appsMaxImplausibilityTime;
+    LowPassFilter_init(&apps1Filter, appsParams.appsLowPassFilterTimeConstant);
+    LowPassFilter_init(&apps2Filter, appsParams.appsLowPassFilterTimeConstant);
 }
 
-void APPSProcessor_evaluate(APPSInputs *inputs, APPSOutputs *output,
+void AppsProcessor_evaluate(AppsInputs *inputs, AppsOutputs *outputs,
                             float deltaTime) {
-    bool pedal1OutOfRange =
-        (inputs->pedal1Percent < apps_params.sensorInRangeLowerBound) ||
-        (inputs->pedal1Percent > apps_params.sensorInRangeUpperBound);
-    bool pedal2OutOfRange =
-        (inputs->pedal2Percent < apps_params.sensorInRangeLowerBound) ||
-        (inputs->pedal2Percent > apps_params.sensorInRangeUpperBound);
 
-    // A sensor is out of range -- throw error and don't allow car to drive.
-    if (pedal1OutOfRange || pedal2OutOfRange) {
-        output->pedalPercent = 0.0f;
-        output->status = APPS_OUT_OF_RANGE;
-        return;
-    }
+    outputs->status = APPS_OK;
 
-    float delta = inputs->pedal1Percent - inputs->pedal2Percent;
+    bool apps1InRange = (inputs->apps1Voltage >= appsParams.apps1VoltageMin) && (inputs->apps1Voltage <= appsParams.apps1VoltageMax);
+    bool apps2InRange = (inputs->apps2Voltage >= appsParams.apps2VoltageMin) && (inputs->apps2Voltage <= appsParams.apps2VoltageMax);
 
-    if (delta < 0)
-        delta *= -1;  // invert in case it is negative (absolute value)
-
-    if (delta > apps_params.allowedPlausibilityRange) {
-        // run timer and if we exceed the amount of time allowed by the rules,
-        // we fault
-        Timer_count(&timer, deltaTime);
-        if (Timer_isFinished(&timer)) {
-            output->pedalPercent = 0.0f;
-            output->status = APPS_DISAGREE;
+    if (!apps1InRange || !apps2InRange) {
+        Timer_count(&implausibilityTimer, deltaTime);
+        if (Timer_isFinished(&implausibilityTimer)) {
+            outputs->status |= APPS_OUT_OF_RANGE;
+            outputs->appsPercent = 0;
+            outputs->apps1Percent = 0;
+            outputs->apps2Percent = 0;
+            LowPassFilter_reset(&apps1Filter);
+            LowPassFilter_reset(&apps2Filter);
             return;
         }
     } else {
-        // we are within the valid range, reset the timer
-        Timer_reset(&timer);
+        Timer_reset(&implausibilityTimer);
     }
 
-    // before accounting for the deadzone, what is our expected pedal %?
-    float appsNoDeadzone =
-        (inputs->pedal1Percent * apps_params.pedal1Bias +
-         inputs->pedal2Percent * (1.0f - apps_params.pedal1Bias));
+    if(apps1InRange) LowPassFilter_add(&apps1Filter, inputs->apps1Voltage, deltaTime);
+    if(apps2InRange) LowPassFilter_add(&apps2Filter, inputs->apps2Voltage, deltaTime);
 
-    output->status = APPS_OK;  // we are good, no errors
 
-    // the multiplier we need to use to get the actual output %
-    float slope = 1.0f / (1.0f - apps_params.appsDeadzoneTopPercent -
-                          apps_params.appsDeadzoneBottomPercent);
+    float apps1Percent = LowPassFilter_get(&apps1Filter) - appsParams.apps1VoltageMin /
+        (appsParams.apps1VoltageMax - appsParams.apps1VoltageMin);
+    float apps2Percent = LowPassFilter_get(&apps2Filter) - appsParams.apps2VoltageMin /
+        (appsParams.apps2VoltageMax - appsParams.apps2VoltageMin);
+    outputs->apps1Percent = apps1Percent;
+    outputs->apps2Percent = apps2Percent;
 
-    if (appsNoDeadzone <= apps_params.appsDeadzoneBottomPercent) {
-        output->pedalPercent = 0.0f;
-    } else if (appsNoDeadzone >= (1.0f - apps_params.appsDeadzoneTopPercent)) {
-        output->pedalPercent = 1.0f;  // max
+    float diff = apps1Percent - apps2Percent;
+    if (diff < 0) { diff = -diff; }
+
+    if (diff > appsParams.allowedPlausibilityRange) {
+        Timer_count(&implausibilityTimer, deltaTime);
+        if (Timer_isFinished(&implausibilityTimer)) {
+            outputs->status |= APPS_DISAGREE;
+            outputs->appsPercent = 0;
+            LowPassFilter_reset(&apps1Filter);
+            LowPassFilter_reset(&apps2Filter);
+            return;
+        }
     } else {
-        // somewhere in between, do some calculations
-        output->pedalPercent =
-            slope * (appsNoDeadzone - apps_params.appsDeadzoneBottomPercent);
+        Timer_reset(&implausibilityTimer);
+    }
+
+    float appsNoDeadzone = (apps1Percent + apps2Percent) / 2.0f;
+
+    if (appsNoDeadzone <= appsParams.appsDeadzoneBottomPercent) {
+        outputs->appsPercent = 0;
+    } else if (appsNoDeadzone >= (1.0f - appsParams.appsDeadzoneTopPercent)) {
+        outputs->appsPercent = 1.0f;
+    } else {
+        float slope = 1.0f / (1.0f - appsParams.appsDeadzoneTopPercent - appsParams.appsDeadzoneBottomPercent);
+        outputs->appsPercent = slope * (appsNoDeadzone - appsParams.appsDeadzoneBottomPercent);
     }
 }

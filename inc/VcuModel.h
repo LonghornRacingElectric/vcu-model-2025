@@ -17,40 +17,39 @@
 #include "blocks/Cooling.h"
 #include "blocks/ParkDriveSystem.h"
 
-typedef struct VCUModelInputs {
-    APPSInputs apps;
-    STOMPPInputs stompp;
-    TorqueMapInputs torque;
-    CoolingInputs cooling;
-    BrakeLightInputs brake_light;
-    bool drive_switch_enabled;
-    bool tractive_system_active;
-} VCUModelInputs;
+typedef struct VcuModelInputs {
+    float apps1Voltage;
+    float apps2Voltage;
 
-typedef struct VCUModelOutputs {
-    APPSOutputs apps;
-    STOMPPOutputs stompp;
-    TorqueMapOutputs torque;
-    CoolingOutputs cooling;
-    BrakeLightOutputs brake_light;
+    bool driveSwitchEnabled;
+    bool tractiveSystemReady;
+} VcuModelInputs;
 
-    bool buzzer_enable;
-    bool drive_enable;
-} VCUModelOutputs;
+typedef struct VcuModelOutputs {
+    float torqueCommand;
+    bool enableInverter;
+    
+    float apps1Percent;  // for observability
+    float apps2Percent;  // for observability
+    float appsPercent;  // for observability
 
-typedef struct VCUModelParameters {
-    APPSParameters apps;
+    bool driveStateEnabled;
+    float brakeLightPercent;
+} VcuModelOutputs;
+
+typedef struct VcuModelParameters {
+    AppsParameters apps;
+
     STOMPPParameters stompp;
     TorqueMapParameters torque;
     CoolingParameters cooling;
-
     BrakeLightParameters brake_light;
-} VCUModelParameters;
+} VcuModelParameters;
 
 
-void VCUModel_evaluate(VCUModelInputs *inputs, VCUModelOutputs *outputs,
+void VcuModel_evaluate(VcuModelInputs *inputs, VcuModelOutputs *outputs,
                        float deltaTime);
 
-void VCUModel_set_parameters(VCUModelParameters *parameters);
+void VcuModel_setParams(VcuModelParameters *parameters);
 
 #endif  // VCUMODEL_H

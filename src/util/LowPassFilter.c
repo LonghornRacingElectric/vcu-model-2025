@@ -14,7 +14,11 @@ void LowPassFilter_reset(LowPassFilter* lowpass) {
 }
 
 void LowPassFilter_add(LowPassFilter* lowpass, float value, float deltaTime) {
-    float alpha = deltaTime / (lowpass->timeConstant + deltaTime);
+    float alpha = 1.0f;
+    if(lowpass->timeConstant > 0)
+    {
+        alpha = deltaTime / (lowpass->timeConstant + deltaTime);
+    }
     lowpass->accumulator = (lowpass->accumulator * (1-alpha)) + (value * alpha);
 }
 

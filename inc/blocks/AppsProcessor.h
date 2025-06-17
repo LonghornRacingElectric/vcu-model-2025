@@ -21,36 +21,36 @@ enum APPS_STATUS {
     APPS_OUT_OF_RANGE = 2  // 0x02
 };
 
-#define APPS_SHUTDOWN_MASK (APPS_DISAGREE)
+typedef struct AppsInputs {
+    float apps1Voltage;
+    float apps2Voltage;
+} AppsInputs;
 
-typedef struct APPSInputs {
-    float pedal1Voltage;
-    float pedal2Voltage;
-    float pedal1Percent;
-    float pedal2Percent;
-} APPSInputs;
-
-typedef struct APPSOutputs {
+typedef struct AppsOutputs {
     enum APPS_STATUS status;
-    float pedalPercent;
-} APPSOutputs;
+    float appsPercent;
+    float apps1Percent;
+    float apps2Percent;
+} AppsOutputs;
 
-typedef struct APPSParameters {
-    float sensorInRangeUpperBound;   // G (NOT GEQ) is OUT OF BOUNDS
-    float sensorInRangeLowerBound;   // L (NOT LEQ) IS OUT OF BOUNDS
-    float allowedPlausibilityRange;  // ALLOWED TOLERANCE, INCLUSIVE
-    float appsDeadzoneTopPercent;    // Percent pedal travel that isn't possible
-    float appsDeadzoneBottomPercent;  // Percent pedal travel that isn't
-                                      // possible from the bottom (0%)
-    float appsMaxImplausibilityTime;  // max time the APPS can remain
-                                      // implausible before fully implausible
-    float pedal1Bias;  // how much to bias output percentage to pedal 1 vs 2
-} APPSParameters;
+typedef struct AppsParameters {
+    float apps1VoltageMin;
+    float apps1VoltageMax;
+    float apps2VoltageMin;
+    float apps2VoltageMax;
+
+    float appsMaxImplausibilityTime;
+    float allowedPlausibilityRange;
+
+    float appsDeadzoneBottomPercent;
+    float appsDeadzoneTopPercent;
+    float appsLowPassFilterTimeConstant;
+} AppsParameters;
 
 
-void APPSProcessor_set_parameters(APPSParameters *parameters);
+void AppsProcessor_setParams(AppsParameters *parameters);
 
-void APPSProcessor_evaluate(APPSInputs *inputs, APPSOutputs *outputs,
+void AppsProcessor_evaluate(AppsInputs *inputs, AppsOutputs *outputs,
                             float deltaTime);
 
 #endif  // APPSPROCESSOR_H
