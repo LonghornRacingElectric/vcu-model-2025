@@ -11,6 +11,8 @@ Created by Dhairya & Henry on 2/27/2025
 #include "../../inc/blocks/BseProcessor.h"
 #include <util/LowPassFilter.h>
 
+#include "usb_vcp.h"
+
 static BseParameters bseParams;
 
 static Timer implausibilityTimer;

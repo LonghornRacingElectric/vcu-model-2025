@@ -4,6 +4,7 @@
 
 #include "../../inc/blocks/ParkDriveSystem.h"
 
+#include "usb_vcp.h"
 #include "../../inc/util/Timer.h"
 
 static ParkDriveParameters parkDriveParams;
@@ -11,10 +12,11 @@ static Timer buzzTimer;
 
 static bool state_inDrive = false;
 
-void ParkDriveSystem_setParams(ParkDriveParameters* params)
+void ParkDriveSystem_setParams()
 {
-    parkDriveParams = *params;
-    buzzTimer.duration = params->buzzerDuration;
+    // parkDriveParams = *params;
+    // buzzTimer.duration = params->buzzerDuration;  // TODO wtf why doesn't this work
+    Timer_init(&buzzTimer, 1.3f);
 }
 
 void ParkDriveSystem_evaluate(ParkDriveInputs* inputs, ParkDriveOutputs* outputs, float deltaTime)
@@ -28,7 +30,7 @@ void ParkDriveSystem_evaluate(ParkDriveInputs* inputs, ParkDriveOutputs* outputs
     }
     else
     {
-        if (inputs->isDriverBraking && inputs->appsPercent == 0
+        if (inputs->isDriverBraking && (inputs->appsPercent == 0)
             && inputs->tractiveSystemReady && inputs->driveSwitchEnabled)
         {
             state_inDrive = true;
@@ -42,4 +44,5 @@ void ParkDriveSystem_evaluate(ParkDriveInputs* inputs, ParkDriveOutputs* outputs
 
     outputs->driveStateEnabled = state_inDrive;
     outputs->appsPercentSafe = inputs->appsPercentStompp * state_inDrive;
+    // usb_printf("buzz: %.2f", buzzTimer.time);
 }

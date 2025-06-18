@@ -7,11 +7,6 @@
 
 #include "VcuModel.h"
 
-typedef struct ParkDriveParameters
-{
-  float buzzerDuration;
-} ParkDriveParameters;
-
 typedef struct ParkDriveInputs
 {
   float appsPercent;
@@ -28,7 +23,12 @@ typedef struct ParkDriveOutputs
   float appsPercentSafe;
 } ParkDriveOutputs;
 
-void ParkDriveSystem_setParams(ParkDriveParameters *parameters);
+typedef struct ParkDriveParameters
+{
+  float buzzerDuration;
+} ParkDriveParameters;
+
+void ParkDriveSystem_setParams();
 void ParkDriveSystem_evaluate(ParkDriveInputs *inputs, ParkDriveOutputs *outputs, float deltaTime);
 
 #endif //VCU_FIRMWARE_2025_PARKDRIVESYSTEM_H

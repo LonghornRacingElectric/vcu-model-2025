@@ -12,6 +12,10 @@ void VcuModel_setParams(VcuModelParameters* parameters)
 {
   vcuParams = *parameters;
   AppsProcessor_setParams(&vcuParams.apps);
+  BseProcessor_setParams(&vcuParams.bse);
+  Stompp_setParams(&vcuParams.stompp);
+  ParkDriveSystem_setParams(); // TODO whyyyy
+  TorqueMap_setParameters(&vcuParams.torque);
 
   // STOMPP_set_parameters(&parameters->stompp);
   // TorqueMap_setParameters(&parameters->torque);
@@ -48,6 +52,7 @@ void VcuModel_evaluate(VcuModelInputs* inputs, VcuModelOutputs* outputs,
     .appsPercentStompp = stomppOutputs.appsPercentStompp,
     .isDriverBraking = bseOutputs.isDriverBraking,
     .driveSwitchEnabled = inputs->driveSwitchEnabled,
+    .tractiveSystemReady = inputs->tractiveSystemReady,
   };
   ParkDriveOutputs parkDriveOutputs = {};
   ParkDriveSystem_evaluate(&parkDriveInputs, &parkDriveOutputs, deltaTime);
@@ -67,7 +72,7 @@ void VcuModel_evaluate(VcuModelInputs* inputs, VcuModelOutputs* outputs,
   TorqueMap_evaluate(&torqueMapInputs, &torqueMapOutputs, deltaTime);
 
   // TODO brake light system
-  outputs->brakeLightPercent = (bseOutputs.isDriverBraking) ? 0.020f : 0.002f;
+  outputs->brakeLightPercent = (bseOutputs.isDriverBraking) ? 0.500f : 0.0f;
   // TODO cooling lmao
   outputs->coolingOn = parkDriveOutputs.driveStateEnabled;
 
@@ -79,7 +84,7 @@ void VcuModel_evaluate(VcuModelInputs* inputs, VcuModelOutputs* outputs,
   outputs->bseStatus = bseOutputs.status;
   outputs->bseFPressure = bseOutputs.bseFPressure;
   outputs->bseRPressure = bseOutputs.bseRPressure;
-  outputs->bseAvgPercent = bseOutputs.bseAvgPressure;
+  outputs->bseAvgPressure = bseOutputs.bseAvgPressure;
   outputs->bseAvgPercent = bseOutputs.bseAvgPercent;
   outputs->isDriverBraking = bseOutputs.isDriverBraking;
 
@@ -89,6 +94,9 @@ void VcuModel_evaluate(VcuModelInputs* inputs, VcuModelOutputs* outputs,
   outputs->driveStateEnabled = parkDriveOutputs.driveStateEnabled;
   outputs->buzzerEnabled = parkDriveOutputs.buzzerEnabled;
   outputs->appsPercentSafe = parkDriveOutputs.appsPercentSafe;
+
+  outputs->torqueCommand = torqueMapOutputs.torqueCommand;
+  outputs->enableInverter = torqueMapOutputs.enableInverter;
 
 
   // Cooling_batt_evaluate(&inputs->cooling, &outputs->cooling);

@@ -54,9 +54,9 @@ void AppsProcessor_evaluate(AppsInputs *inputs, AppsOutputs *outputs,
     if(apps2InRange) LowPassFilter_add(&apps2Filter, inputs->apps2Voltage, deltaTime);
 
 
-    float apps1Percent = LowPassFilter_get(&apps1Filter) - appsParams.apps1VoltageMin /
+    float apps1Percent = (LowPassFilter_get(&apps1Filter) - appsParams.apps1VoltageMin) /
         (appsParams.apps1VoltageMax - appsParams.apps1VoltageMin);
-    float apps2Percent = LowPassFilter_get(&apps2Filter) - appsParams.apps2VoltageMin /
+    float apps2Percent = (LowPassFilter_get(&apps2Filter) - appsParams.apps2VoltageMin) /
         (appsParams.apps2VoltageMax - appsParams.apps2VoltageMin);
     outputs->apps1Percent = apps1Percent;
     outputs->apps2Percent = apps2Percent;

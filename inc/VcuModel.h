@@ -15,7 +15,6 @@
 #include "blocks/BrakeLight.h"
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
-#include "blocks/Cooling.h"
 #include "blocks/ParkDriveSystem.h"
 
 typedef struct VcuModelInputs {
@@ -59,10 +58,11 @@ typedef struct VcuModelParameters {
     AppsParameters apps;
     BseParameters bse;
     StomppParameters stompp;
-
+    // ParkDriveParameters parkDrive;
     TorqueMapParameters torque;
-    CoolingParameters cooling;
-    BrakeLightParameters brake_light;
+
+    // CoolingParameters cooling;
+    // BrakeLightParameters brake_light;
 } VcuModelParameters;
 
 
