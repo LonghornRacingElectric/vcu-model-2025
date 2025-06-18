@@ -7,7 +7,28 @@
 
 #include "VcuModel.h"
 
-void ParkDriveSystem_set_parameters(STOMPPParameters *parameters);
-void ParkDriveSystem_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs, bool drive_switch_enabled,
-                              bool tractive_system_active, float dt);
+typedef struct ParkDriveParameters
+{
+  float buzzerDuration;
+} ParkDriveParameters;
+
+typedef struct ParkDriveInputs
+{
+  float appsPercent;
+  float appsPercentStompp;
+  bool isDriverBraking;
+  bool driveSwitchEnabled;
+  bool tractiveSystemReady;
+} ParkDriveInputs;
+
+typedef struct ParkDriveOutputs
+{
+  bool driveStateEnabled;
+  bool buzzerEnabled;
+  float appsPercentSafe;
+} ParkDriveOutputs;
+
+void ParkDriveSystem_setParams(ParkDriveParameters *parameters);
+void ParkDriveSystem_evaluate(ParkDriveInputs *inputs, ParkDriveOutputs *outputs, float deltaTime);
+
 #endif //VCU_FIRMWARE_2025_PARKDRIVESYSTEM_H

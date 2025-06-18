@@ -8,43 +8,30 @@ Created by Dhairya & Henry on 2/26/2025
 
 #include "../../inc/blocks/Stompp.h"
 
-static bool stompp_active =
-        false;  // keeps track of current state of stompp, so we
-// only re-enable if we fall below threshold
+// state variable
+static bool state_isStomppActive = false;
 
-static STOMPPParameters stompp_params;
+static StomppParameters stompp_params;
 
-void STOMPP_set_parameters(STOMPPParameters *params) {
-    stompp_params =
-        *params;  // parameters is a static variable defined in the header
+void Stompp_setParams(StomppParameters* params)
+{
+    stompp_params = *params;
 }
 
-void STOMPP_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs) {
-    if (inputs->apps_percent >= stompp_params.stomppAppsCutoffThreshold &&
-        inputs->bse_percent >= stompp_params.mechanicalBrakeThreshold) {
-        // failed rules check, enable stompp
-        STOMPP_enable(outputs);
-    } else if (stompp_active == true) {
-        // stompp was already activated but is not currently hitting rules req.
-        if (inputs->apps_percent < stompp_params.stomppAppsRecoveryThreshold) {
-            // allow stompp to be reset after falling below threshold
-            STOMPP_disable(outputs);
-        } else {
-            // keep stompp activated and output faulted
-            STOMPP_enable(outputs);
-        }
-    } else {
-        // stompp was not active and never hit the rules limit, keep it off
-        STOMPP_disable(outputs);
+void Stompp_evaluate(StomppInputs* inputs, StomppOutputs* outputs, float deltaTime)
+{
+    if (inputs->appsPercent >= stompp_params.stomppAppsCutoffThreshold && inputs->isDriverBraking)
+    {
+        state_isStomppActive = true;
     }
-}
+    else if (state_isStomppActive == true)
+    {
+        if (inputs->appsPercent < stompp_params.stomppAppsRecoveryThreshold)
+        {
+            state_isStomppActive = false;
+        }
+    }
 
-void STOMPP_enable(STOMPPOutputs *outputs) {
-    stompp_active = true;
-    outputs->output = STOMPP_FAULT;
-}
-
-void STOMPP_disable(STOMPPOutputs *outputs) {
-    stompp_active = false;
-    outputs->output = STOMPP_OK;
+    outputs->status = (state_isStomppActive) ? STOMPP_VIOLATED : STOMPP_OK;
+    outputs->appsPercentStompp = (state_isStomppActive) ? 0.0f : inputs->appsPercent;
 }

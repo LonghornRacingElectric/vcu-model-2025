@@ -6,24 +6,26 @@ Created by Dhairya on 2/28/2025
 
 */
 
+#include <stdbool.h>
+
 #include "../util/Lookup1D.h"
 
 #ifndef TORQUEMAP_H
 #define TORQUEMAP_H
 
 typedef struct TorqueMapInputs {
-    float apps;            // pedal travel (%)
+    float appsPercentSafe; // pedal travel (%)
+    bool appsOk, bseOk, stomppOk, driveStateEnabled;
+
     float motorTemp;       // (deg C)
-    float motorRpm;        // (rpm)
     float inverterTemp;    // (deg C)
     float batteryTemp;     // (deg C)
     float batterySoc;      // (%)
-    float batteryVoltage;  // (V)
-    float batteryCurrent;  // (A)
 } TorqueMapInputs;
 
 typedef struct TorqueMapOutputs {
-    float torqueRequest;  // torque (Nm)
+    float torqueCommand;  // torque (Nm)
+    bool enableInverter;// TODO move to last step
 } TorqueMapOutputs;
 
 typedef struct TorqueMapParameters {
@@ -34,6 +36,6 @@ typedef struct TorqueMapParameters {
 
 void TorqueMap_setParameters(TorqueMapParameters *params);
 
-void TorqueMap_evaluate(TorqueMapInputs *inputs, TorqueMapOutputs *outputs);
+void TorqueMap_evaluate(TorqueMapInputs *inputs, TorqueMapOutputs *outputs, float deltaTime);
 
 #endif  // TORQUEMAP_H

@@ -11,6 +11,7 @@
 
 #include "VcuParameters.h"
 #include "blocks/AppsProcessor.h"
+#include "blocks/BseProcessor.h"
 #include "blocks/BrakeLight.h"
 #include "blocks/Stompp.h"
 #include "blocks/TorqueMap.h"
@@ -20,6 +21,8 @@
 typedef struct VcuModelInputs {
     float apps1Voltage;
     float apps2Voltage;
+    float bseFVoltage;
+    float bseRVoltage;
 
     bool driveSwitchEnabled;
     bool tractiveSystemReady;
@@ -28,19 +31,35 @@ typedef struct VcuModelInputs {
 typedef struct VcuModelOutputs {
     float torqueCommand;
     bool enableInverter;
-    
-    float apps1Percent;  // for observability
-    float apps2Percent;  // for observability
-    float appsPercent;  // for observability
-
     bool driveStateEnabled;
+    bool buzzerEnabled;
     float brakeLightPercent;
+    bool coolingOn;
+
+    // observables
+    enum APPS_STATUS appsStatus;
+    float apps1Percent;
+    float apps2Percent;
+    float appsPercent;
+
+    enum BSE_STATUS bseStatus;
+    float bseFPressure;
+    float bseRPressure;
+    float bseAvgPressure;
+    float bseAvgPercent;
+    bool isDriverBraking;
+
+    enum STOMPP_STATUS stomppStatus;
+    float appsPercentStompp;
+
+    float appsPercentSafe;
 } VcuModelOutputs;
 
 typedef struct VcuModelParameters {
     AppsParameters apps;
+    BseParameters bse;
+    StomppParameters stompp;
 
-    STOMPPParameters stompp;
     TorqueMapParameters torque;
     CoolingParameters cooling;
     BrakeLightParameters brake_light;

@@ -6,36 +6,40 @@
 
 #include "../../inc/util/Timer.h"
 
-static STOMPPParameters params;
-static bool inDrive;
-static Timer timer;
+static ParkDriveParameters parkDriveParams;
+static Timer buzzTimer;
 
-void ParkDriveSystem_set_parameters(STOMPPParameters *parameters) {
-    params = *parameters;
-    inDrive = false;
-    timer.duration = 1.0f; // 1 second (?)
+static bool state_inDrive = false;
+
+void ParkDriveSystem_setParams(ParkDriveParameters* params)
+{
+    parkDriveParams = *params;
+    buzzTimer.duration = params->buzzerDuration;
 }
 
-void ParkDriveSystem_evaluate(STOMPPInputs *inputs, STOMPPOutputs *outputs, bool drive_switch_enabled, bool tractive_system_active, float dt) {
-    if(!inDrive) {
-        // need to make sure brake pressed, not accel. Will use the braking threshold and accel thresdhold for this.
-        if (inputs->bse_percent > params.mechanicalBrakeThreshold &&
-            (inputs->apps_percent <= params.stomppAppsRecoveryThreshold)) {
-//            inDrive = inputs->drive_switch_enabled && inputs->tractive_system_active; // we can successfully go into drive (or whatever the switch is)
+void ParkDriveSystem_evaluate(ParkDriveInputs* inputs, ParkDriveOutputs* outputs, float deltaTime)
+{
+    if (state_inDrive)
+    {
+        state_inDrive = inputs->tractiveSystemReady && inputs->driveSwitchEnabled;
 
-            if(inDrive) {
-                // if we went into drive, reset timer and enable buzzer
-                Timer_reset(&timer);
-            }
+        Timer_count(&buzzTimer, deltaTime);
+        outputs->buzzerEnabled = !Timer_isFinished(&buzzTimer);
+    }
+    else
+    {
+        if (inputs->isDriverBraking && inputs->appsPercent == 0
+            && inputs->tractiveSystemReady && inputs->driveSwitchEnabled)
+        {
+            state_inDrive = true;
+            Timer_reset(&buzzTimer);
+            outputs->buzzerEnabled = true;
+        } else
+        {
+            outputs->buzzerEnabled = false;
         }
-    } else {
-        // if already in drive, we can just update it to whatever the latest CAN packet says.
-        inDrive = drive_switch_enabled && tractive_system_active;
-
-        // buzzerrrr (as long as it hasn't been a full second, keep the buzzer on).
-        outputs->buzzer_enable = !Timer_isFinished(&timer);
-        Timer_count(&timer, dt);
     }
 
-    outputs->drive_enable = inDrive;
+    outputs->driveStateEnabled = state_inDrive;
+    outputs->appsPercentSafe = inputs->appsPercentStompp * state_inDrive;
 }
